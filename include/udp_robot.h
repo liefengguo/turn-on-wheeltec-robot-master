@@ -51,8 +51,8 @@ typedef struct _RECEIVE_DATA_
 class udp_robot
 {
 	public:
-		// udp_robot();  //Constructor //构造函数
-		// ~udp_robot(); //Destructor //析构函数
+		udp_robot();  
+		// ~udp_robot(); 
 		void Control();   //Loop control code //循环控制代码
 		
 	private:
@@ -66,13 +66,12 @@ class udp_robot
         bool Get_Sensor_Data();   
         unsigned char Check_Sum(unsigned char Count_Number,unsigned char mode); //BBC check function //BBC校验函数
 
-        string usart_port_name, robot_frame_id, gyro_frame_id, odom_frame_id; //Define the related variables //定义相关变量
-              //Serial communication baud rate //串口通信波特率
         RECEIVE_DATA Receive_Data; //The serial port receives the data structure //串口接收数据结构体
         SEND_DATA Send_Data;       //The serial port sends the data structure //串口发送数据结构体
         std::string robotIP;           //udp IP
         int robotPort;
         int udpSocket;
         struct sockaddr_in robotAddr;
+
 };
 #endif

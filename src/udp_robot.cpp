@@ -58,61 +58,47 @@ void udp_robot::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg){
         ROS_ERROR("Failed to send UDP data");
     }
 }
-int main(int argc, char** argv)
-{
-    ros::init(argc, argv, "udp_command_sender");
+udp_robot::udp_robot(){
+    memset(&Send_Data, 0, sizeof(Send_Data));
     ros::NodeHandle nh;
+    nh.param<std::string>("robotIP", robotIP , "192.168.100.53" );
+    nh.param<int>        ("robotPort", robotPort, 8888); 
 
-    udp_robot Robot_Control;
+    Cmd_Vel_Sub = n.subscribe("cmd_vel", 100, &udp_robot::cmdVelCallback, this); 
+    ROS_INFO_STREAM("Data ready"); //Prompt message //提示信息
 
-    // 创建UDP socket
-    int udpSocket = socket(AF_INET, SOCK_DGRAM, 0);
+    udpSocket = socket(AF_INET, SOCK_DGRAM, 0);
     if (udpSocket < 0)
     {
         ROS_ERROR("Failed to create UDP socket");
-        return -1;
     }
+    try
+    {
+        robotAddr.sin_family = AF_INET;
+        robotAddr.sin_port = htons(robotPort);
+        robotAddr.sin_addr.s_addr = inet_addr(robotIP.c_str());
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+  
+}
 
-    // 设置下位机的IP地址和端口号
-    std::string robotIP = "192.168.1.100"; // 修改为实际的下位机IP地址
-    int robotPort = 5678; // 修改为实际的下位机UDP端口
 
-    struct sockaddr_in robotAddr;
-    robotAddr.sin_family = AF_INET;
-    robotAddr.sin_port = htons(robotPort);
-    robotAddr.sin_addr.s_addr = inet_addr(robotIP.c_str());
+int main(int argc, char** argv)
+{
+    ros::init(argc, argv, "udp_command_sender");
+    
 
-    // 订阅cmd_vel话题
-    ros::Subscriber cmdVelSub = nh.subscribe<geometry_msgs::Twist>("cmd_vel", 10,
-        [&](const geometry_msgs::Twist::ConstPtr& msg)
-        {
-            // 构建发送数据包
-            unsigned char data[10];
-            data[0] = 0x7B; // 帧头
-            data[1] = 0x01; // 预留位1
-            data[2] = 0x00; // 预留位2
-            data[3] = static_cast<unsigned char>(msg->linear.x); // x轴目标速度
-            data[4] = static_cast<unsigned char>(msg->linear.y); // y轴目标速度
-            data[5] = static_cast<unsigned char>(msg->linear.z); // z轴目标速度
-            data[6] = static_cast<unsigned char>(msg->angular.x); // 预留位3
-            data[7] = static_cast<unsigned char>(msg->angular.y); // 预留位4
-            data[8] = static_cast<unsigned char>(msg->angular.z); // 预留位5
-            data[9] = 0x7D; // 帧尾
-
-            // 发送数据包
-            ssize_t sentBytes = sendto(udpSocket, data, sizeof(data), 0,
-                reinterpret_cast<struct sockaddr*>(&robotAddr), sizeof(robotAddr));
-
-            if (sentBytes < 0)
-            {
-                ROS_ERROR("Failed to send UDP data");
-            }
-        });
+    udp_robot Robot_Control;
 
     ros::spin();
 
     // 关闭UDP socket
-    close(udpSocket);
+    // close(udpSocket);
+
 
     return 0;
 }
