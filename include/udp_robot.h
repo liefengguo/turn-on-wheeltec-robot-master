@@ -52,7 +52,7 @@ class udp_robot
 {
 	public:
 		udp_robot();  
-		// ~udp_robot(); 
+		~udp_robot(); 
 		void Control();   //Loop control code //循环控制代码
 		
 	private:

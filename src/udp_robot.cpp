@@ -86,7 +86,32 @@ udp_robot::udp_robot(){
   
 }
 
+udp_robot::~udp_robot(){
+    //对象turn_on_robot结束前向下位机发送停止运动命令
+    Send_Data.tx[0]=FRAME_HEADER;
+    Send_Data.tx[1] = 0;  
+    Send_Data.tx[2] = 0; 
 
+    //The target velocity of the X-axis of the robot //机器人X轴的目标线速度 
+    Send_Data.tx[4] = 0;     
+    Send_Data.tx[3] = 0;  
+
+    //The target velocity of the Y-axis of the robot //机器人Y轴的目标线速度 
+    Send_Data.tx[6] = 0;
+    Send_Data.tx[5] = 0;  
+
+    //The target velocity of the Z-axis of the robot //机器人Z轴的目标角速度 
+    Send_Data.tx[8] = 0;  
+    Send_Data.tx[7] = 0;    
+    Send_Data.tx[9]=Check_Sum(9,SEND_DATA_CHECK); //Check the bits for the Check_Sum function //校验位，规则参见Check_Sum函数
+    Send_Data.tx[10]=FRAME_TAIL; 
+    ssize_t sentBytes = sendto(udpSocket, Send_Data.tx, sizeof(Send_Data.tx), 0,
+    reinterpret_cast<struct sockaddr*>(&robotAddr), sizeof(robotAddr));
+
+    close(udpSocket);
+    ROS_INFO_STREAM("Shutting down"); //Prompt message //提示信息
+
+}
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "udp_command_sender");
@@ -95,10 +120,6 @@ int main(int argc, char** argv)
     udp_robot Robot_Control;
 
     ros::spin();
-
-    // 关闭UDP socket
-    // close(udpSocket);
-
 
     return 0;
 }
