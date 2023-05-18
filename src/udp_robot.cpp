@@ -60,9 +60,8 @@ void udp_robot::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg){
 }
 udp_robot::udp_robot(){
     memset(&Send_Data, 0, sizeof(Send_Data));
-    ros::NodeHandle nh;
-    nh.param<std::string>("robotIP", robotIP , "192.168.100.53" );
-    nh.param<int>        ("robotPort", robotPort, 8888); 
+    n.param<std::string>("udp_command_sender/robot_ip", robotIP , "192.168.100.53" );
+    n.param<int>        ("udp_command_sender/robot_port", robotPort, 8888); 
 
     Cmd_Vel_Sub = n.subscribe("cmd_vel", 100, &udp_robot::cmdVelCallback, this); 
     ROS_INFO_STREAM("Data ready"); //Prompt message //提示信息
@@ -118,6 +117,6 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "udp_command_sender");
     
     udp_robot Robot_Control;
-
+    ros::spin();
     return 0;
 }
