@@ -22,6 +22,7 @@ unsigned char udp_robot::Check_Sum(unsigned char Count_Number,unsigned char mode
 }
 void udp_robot::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg){
     short  transition;  //intermediate variable //中间变量
+    char * send_buf = new char[11];
     Send_Data.tx[0]=FRAME_HEADER; //frame head 0x7B //帧头0X7B
     Send_Data.tx[1] = FRAME_HEADER_SEC; //set aside //预留位
     Send_Data.tx[2] = 0; //set aside //预留位
@@ -52,7 +53,12 @@ void udp_robot::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg){
     // 发送数据包
     ssize_t sentBytes = sendto(udpSocket, Send_Data.tx, sizeof(Send_Data.tx), 0,
         reinterpret_cast<struct sockaddr*>(&robotAddr), sizeof(robotAddr));
-
+    std::cout<<">.<!"<<endl;
+    // sprintf((char)(Send_Data.tx));
+    for (size_t i = 0; i < sizeof(Send_Data.tx); ++i) {
+        std::cout << std::hex << static_cast<int>(Send_Data.tx[i])<<"  ";
+        // std::cout << std::hex << static_cast<int>(Send_Data.tx[i])<<"  " << i << " "<<endl;
+    }
     if (sentBytes < 0)
     {
         ROS_ERROR("Failed to send UDP data");

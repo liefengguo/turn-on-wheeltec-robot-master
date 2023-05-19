@@ -25,7 +25,7 @@ using namespace std;
 //ROS向下位机发送数据的结构体
 typedef struct _SEND_DATA_  
 {
-	    char tx[SEND_DATA_SIZE];
+	    uint8_t tx[SEND_DATA_SIZE];
 		float X_speed;	       
 		float Y_speed;           
 		float Z_speed;         
