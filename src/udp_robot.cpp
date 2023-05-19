@@ -25,7 +25,7 @@ void udp_robot::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg){
     char * send_buf = new char[11];
     Send_Data.tx[0]=FRAME_HEADER; //frame head 0x7B //帧头0X7B
     Send_Data.tx[1] = FRAME_HEADER_SEC; //set aside //预留位
-    Send_Data.tx[2] = 0; //set aside //预留位
+    Send_Data.tx[2] = FRAME_HEADER_TRE; //set aside //预留位
 
     //The target velocity of the X-axis of the robot
     //机器人x轴的目标线速度
@@ -95,7 +95,7 @@ udp_robot::~udp_robot(){
     //对象turn_on_robot结束前向下位机发送停止运动命令
     Send_Data.tx[0]=FRAME_HEADER;
     Send_Data.tx[1] = FRAME_HEADER_SEC;  
-    Send_Data.tx[2] = 0; 
+    Send_Data.tx[2] = FRAME_HEADER_TRE; 
 
     //The target velocity of the X-axis of the robot //机器人X轴的目标线速度 
     Send_Data.tx[4] = 0;     

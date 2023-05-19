@@ -14,7 +14,8 @@ using namespace std;
 #define SEND_DATA_CHECK   1          //Send data check flag bits //发送数据校验标志位
 #define READ_DATA_CHECK   0          //Receive data to check flag bits //接收数据校验标志位
 #define FRAME_HEADER      0X7B       //Frame head //帧头
-#define FRAME_HEADER_SEC  0X01       //帧头第二位置
+#define FRAME_HEADER_SEC  0X01       //帧头第二位置 父指令码
+#define FRAME_HEADER_TRE  0X00       //帧头第三位置 子指令
 #define FRAME_TAIL        0X7D       //Frame tail //帧尾
 #define RECEIVE_DATA_SIZE 24         //The length of the data sent by the lower computer //下位机发送过来的数据的长度
 #define SEND_DATA_SIZE    11         //The length of data sent by ROS to the lower machine //ROS向下位机发送的数据的长度
