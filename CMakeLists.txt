@@ -35,6 +35,8 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_executable(udp_robot src/udp_robot.cpp)
 target_link_libraries(udp_robot ${catkin_LIBRARIES})
+add_executable(test_udp src/test_udp.cpp)
+target_link_libraries(test_udp ${catkin_LIBRARIES})
 
 
 add_executable(keyboard_controller src/keyboard_controller.cpp)
