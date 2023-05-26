@@ -195,10 +195,26 @@ void udp_action::cmd_turn_light(uint8_t left , uint8_t right){
         printf("Failed to send UDP data");
     }
 }
+
+void udp_action::main_up(uint8_t up){
+    cmd_main_clean(1,up);
+}
+void udp_action::main_clean(uint16_t data){
+    cmd_main_clean(2,data);
+}
+void udp_action::sub_up(uint8_t up){cmd_sub_clean(1,up);}
+void udp_action::sub_out(uint8_t out){cmd_sub_clean(2,out);}
+void udp_action::sub_clean(uint8_t up){cmd_sub_clean(3,up);}
+void udp_action::big_light(uint8_t up){cmd_turn_fun(1,up);}
+void udp_action::left_light(uint8_t up){cmd_turn_light(up,0);}
+void udp_action::right_light(uint8_t up){cmd_turn_light(0,up);}
+void udp_action::fan(uint8_t up){cmd_turn_fun(3,up);}
+void udp_action::pump(uint8_t up){cmd_turn_fun(4,up);}
+
 int main(int argc, char** argv)
 {
     
     udp_action robot_action;
-    robot_action.cmd_main_clean(2,30);
+    // robot_action.cmd_main_clean(2,30);
     return 0;
 }
