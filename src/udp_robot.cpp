@@ -20,6 +20,14 @@ unsigned char udp_robot::Check_Sum(unsigned char Count_Number,unsigned char mode
   }
   return check_sum; //Returns the bitwise XOR result //返回按位异或结果
 }
+void udp_robot::cmd_main_clean(const std_msgs::Int32::ConstPtr& msg){
+    short  transition;  //intermediate variable //中间变量
+    char * send_buf = new char[11];
+    Send_Data.tx[0]=FRAME_HEADER; //frame head 0x7B //帧头0X7B
+    Send_Data.tx[1] = FRAME_HEADER_MAIN_CLEAN; //set aside //预留位
+    Send_Data.tx[2] = FRAME_HEADER_TRE; //set aside //预留位
+
+}
 void udp_robot::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg){
     short  transition;  //intermediate variable //中间变量
     char * send_buf = new char[11];
