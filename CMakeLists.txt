@@ -42,6 +42,8 @@ target_link_libraries(udp_action ${catkin_LIBRARIES})
 add_executable(test_udp src/test_udp.cpp)
 target_link_libraries(test_udp ${catkin_LIBRARIES})
 
+add_executable(udp_log src/udp_log.cpp)
+target_link_libraries(udp_log ${catkin_LIBRARIES})
 
 add_executable(keyboard_controller src/keyboard_controller.cpp)
 target_link_libraries(keyboard_controller ${catkin_LIBRARIES})          

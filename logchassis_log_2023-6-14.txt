@@ -1,0 +1,645 @@
+Timestamp: Wed Jun 14 10:27:11 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:27:11 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:27:13 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:27:13 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:27:14 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:27:14 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:27:15 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:27:15 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:29:01 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:29:01 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:29:03 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:29:03 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:29:05 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:29:05 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:31:16 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:31:16 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:31:20 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:31:20 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:31:22 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:31:22 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:33:01 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:33:01 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:34:34 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:34:34 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:47:10 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:47:10 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:48:51 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:48:51 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:51:07 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:51:07 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:51:10 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:51:10 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:51:55 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:53:01 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:53:01 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:53:03 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:53:03 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:54:50 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:54:50 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:56:50 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:56:50 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:56:51 2023
+Battery SOC: 0%
+Battery Voltage: 21V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
+Timestamp: Wed Jun 14 10:56:51 2023
+Battery SOC: 0%
+Battery Voltage: 122V
+Battery Current: 32000A
+Battery Alarm: 0
+Battery Temperature 1: 0
+Battery Temperature 2: 0
+Car Speed: 0
+Encoder Value: 0
+Body Temperature: 0
+Body Humidity: 0
+Angle X: 0
+Angle Y: 0
+Angle Z: 0
+------------------------
