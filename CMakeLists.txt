@@ -16,13 +16,21 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   tf
 )
+add_message_files(
+  FILES
+  Speed.msg
+)
+generate_messages(
+   DEPENDENCIES
+   std_msgs
+)
 
 # ulimit -c unlimited
 # ssh firefly@192.168.1.76
 add_compile_options(-g -std=c++11)    #-g -> core dumped
 
 catkin_package(
-  CATKIN_DEPENDS roscpp geometry_msgs
+  CATKIN_DEPENDS roscpp geometry_msgs message_runtime
 )
 
 # defind robot status massage

@@ -7,9 +7,10 @@
 #include <unistd.h>
 #include<fstream> 
 #include <sstream>
-
 #include <algorithm>
 #include <chrono>
+#include <turn_on_wheeltec_robot/Speed.h>
+#include "ros/ros.h"
 #define SERVER_IP "127.0.0.1" // 本地IP地址
 #define SERVER_PORT 8888      // 监听端口号
 uint8_t receivedData[50];
@@ -166,11 +167,15 @@ public:
     std::ofstream logfile;
 };
 
-int main() {
+int main(int argc, char** argv) {
+    ros::init(argc, argv, "car_info");
+    ros::NodeHandle n;    
     int sockfd;
     struct sockaddr_in serverAddr, clientAddr;
     socklen_t clientAddrLen = sizeof(clientAddr);
     ChassisParser chassisParser ;
+    turn_on_wheeltec_robot::Speed speed ;
+    ros::Publisher pub_carSpeed = n.advertise<turn_on_wheeltec_robot::Speed>("/fixposition/speed",10);
 
     // 创建UDP套接字
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
@@ -222,8 +227,13 @@ int main() {
             chassisParser.parseChassisData();
             chassisParser.logChassisData();
             // chassisParser.closeLog();
+            std::vector<int32_t> speedData;
+            speedData.push_back(chassisParser.chassisData.carSpeed*1000);// 换算成mm/s
 
-                    
+            speed.speeds = speedData;
+            pub_carSpeed.publish(speed);
+
+
             std::cout << std::endl;
         }
     }
