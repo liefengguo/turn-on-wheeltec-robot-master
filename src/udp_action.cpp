@@ -211,11 +211,46 @@ void udp_action::right_light(uint8_t up){cmd_turn_light(0,up);}
 void udp_action::fan(uint8_t up){cmd_turn_fun(3,up);}
 void udp_action::pump(uint8_t up){cmd_turn_fun(4,up);}
 
+void udp_action::precursor(uint8_t up){
+    short  transition;  //intermediate variable //中间变量
+    char * send_buf = new char[11];
+    Send_Data.tx[0]=FRAME_HEADER; //frame head 0x7B //帧头0X7B
+    Send_Data.tx[1] = 6; //set aside //预留位
+    Send_Data.tx[2] = 1; //set aside //预留位
+
+    Send_Data.tx[3] = up;
+
+    Send_Data.tx[4] = 0;     
+
+    //The target velocity of the Y-axis of the robot //机器人Y轴的目标线速度 
+    Send_Data.tx[6] = 0;
+    Send_Data.tx[5] = 0;  
+
+    //The target velocity of the Z-axis of the robot //机器人Z轴的目标角速度 
+    Send_Data.tx[8] = 0;  
+    Send_Data.tx[7] = 0;    
+    Send_Data.tx[9]=Check_Sum(9,SEND_DATA_CHECK); //Check the bits for the Check_Sum function //校验位，规则参见Check_Sum函数
+    Send_Data.tx[10]=FRAME_TAIL; 
+    // 发送数据包
+    ssize_t sentBytes = sendto(udpSocket, Send_Data.tx, sizeof(Send_Data.tx), 0,
+        reinterpret_cast<struct sockaddr*>(&robotAddr), sizeof(robotAddr));
+    std::cout<<">.<!"<<endl;
+    // sprintf((char)(Send_Data.tx));
+    for (size_t i = 0; i < sizeof(Send_Data.tx); ++i) {
+        std::cout << std::hex << static_cast<int>(Send_Data.tx[i])<<"  ";
+        // std::cout << std::hex << static_cast<int>(Send_Data.tx[i])<<"  " << i << " "<<endl;
+    }
+    if (sentBytes < 0)
+    {
+        printf("Failed to send UDP data");
+    }
+}
+
 int main(int argc, char** argv)
 {
-    
     udp_action robot_action;
     robot_action.main_clean(20);
+    robot_action.precursor(1);
     // robot_action.cmd_main_clean(2,30);
     return 0;
 }

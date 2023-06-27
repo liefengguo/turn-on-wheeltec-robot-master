@@ -21,6 +21,7 @@ class udp_action
         void right_light(uint8_t up);
         void fan(uint8_t up);
         void pump(uint8_t up);
+        void precursor(uint8_t up);
 		
 	private:
         unsigned char Check_Sum(unsigned char Count_Number,unsigned char mode); //BBC check function //BBC校验函数

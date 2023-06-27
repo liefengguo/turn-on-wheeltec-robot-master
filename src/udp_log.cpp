@@ -203,7 +203,7 @@ int main(int argc, char** argv) {
 
     // 接收数据
     ssize_t numBytesReceived;
-    while (true) {
+    while (ros::ok) {
         numBytesReceived = recvfrom(sockfd, receivedData, sizeof(receivedData), 0,
                                     (struct sockaddr *)&clientAddr, &clientAddrLen);
 
@@ -240,6 +240,7 @@ int main(int argc, char** argv) {
     
     // 关闭套接字
     close(sockfd);
+    ros::spin();
 
     return 0;
 }
