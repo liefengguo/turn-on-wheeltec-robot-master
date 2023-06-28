@@ -9,7 +9,7 @@ ChassisParser::ChassisParser() {
     auto now = std::chrono::system_clock::now();
     std::time_t timestamp = std::chrono::system_clock::to_time_t(now);
     struct tm* timeinfo = std::localtime(&timestamp);
-    std::string path = "src/turn-on-wheeltec-robot-master/log/";
+    std::string path = "/home/glf/log/";
 
     filename <<path<< "chassis_log_" << (timeinfo->tm_year + 1900) << "-"
                 << (timeinfo->tm_mon + 1) << "-" << timeinfo->tm_mday << ".txt";
@@ -128,6 +128,7 @@ void ChassisParser::logChassisData() {
         // ...
     }
 
+
 int main(int argc, char** argv) {
     ros::init(argc, argv, "car_info");
     ros::NodeHandle n;    
@@ -165,7 +166,7 @@ int main(int argc, char** argv) {
     // 接收数据
     ssize_t numBytesReceived;
     while (ros::ok) {
-        numBytesReceived = recvfrom(sockfd, receivedData, sizeof(receivedData), 0,
+        numBytesReceived = recvfrom(sockfd, chassisParser.receivedData, sizeof(chassisParser.receivedData), 0,
                                     (struct sockaddr *)&clientAddr, &clientAddrLen);
 
         if (numBytesReceived == -1) {
@@ -183,7 +184,7 @@ int main(int argc, char** argv) {
             // 例如，打印接收到的数据内容
             std::cout << "Received data: ";
             for (size_t i = 0; i < numBytesReceived; ++i) {
-                std::cout << std::hex << static_cast<int>(receivedData[i]) << " ";
+                std::cout << std::hex << static_cast<int>(chassisParser.receivedData[i]) << " ";
             }
             chassisParser.parseChassisData();
             chassisParser.logChassisData();
@@ -207,32 +208,31 @@ int main(int argc, char** argv) {
 }
 
 
+// void parseAndSaveChassisData() {
+//     // 获取当前时间
+//     time_t currentTime;
+//     time(&currentTime);
+//     struct tm* timeInfo = localtime(&currentTime);
 
-void parseAndSaveChassisData() {
-    // 获取当前时间
-    time_t currentTime;
-    time(&currentTime);
-    struct tm* timeInfo = localtime(&currentTime);
+//     // 打开日志文件
+//     FILE* logFile = fopen("log.txt", "a");
+//     if (logFile == NULL) {
+//         printf("无法打开日志文件。\n");
+//         return;
+//     }
 
-    // 打开日志文件
-    FILE* logFile = fopen("log.txt", "a");
-    if (logFile == NULL) {
-        printf("无法打开日志文件。\n");
-        return;
-    }
+//     // 解析并保存数据
+//     unsigned char receivedData[50]; // 假设接收到的数据存储在receivedData数组中
 
-    // 解析并保存数据
-    unsigned char receivedData[50]; // 假设接收到的数据存储在receivedData数组中
+//     // 保存时间戳
+//     fprintf(logFile, "[%02d:%02d:%02d] Chassis Data:\n", timeInfo->tm_hour, timeInfo->tm_min, timeInfo->tm_sec);
 
-    // 保存时间戳
-    fprintf(logFile, "[%02d:%02d:%02d] Chassis Data:\n", timeInfo->tm_hour, timeInfo->tm_min, timeInfo->tm_sec);
+//     // 解析和保存数据
+//     for (unsigned char i = 0; i < 50; i++) {
+//         fprintf(logFile, "%02X ", receivedData[i]);
+//     }
+//     fprintf(logFile, "\n");
 
-    // 解析和保存数据
-    for (unsigned char i = 0; i < 50; i++) {
-        fprintf(logFile, "%02X ", receivedData[i]);
-    }
-    fprintf(logFile, "\n");
-
-    // 关闭日志文件
-    fclose(logFile);
-}
+//     // 关闭日志文件
+//     fclose(logFile);
+// }

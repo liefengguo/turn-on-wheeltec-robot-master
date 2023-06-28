@@ -1,3 +1,7 @@
+#ifndef __UDP_LOG_H_
+#define __UDP_LOG_H_
+
+
 #include <stdio.h>
 #include <time.h>
 #include <iostream>
@@ -13,7 +17,6 @@
 #include "ros/ros.h"
 #define SERVER_IP "127.0.0.1" // 本地IP地址
 #define SERVER_PORT 8888      // 监听端口号
-uint8_t receivedData[50];
 
 struct ChassisData {
     uint16_t batSOC;
@@ -43,4 +46,7 @@ public:
 public:
     ChassisData chassisData;
     std::ofstream logfile;
+    uint8_t receivedData[50];
+
 };
+#endif
