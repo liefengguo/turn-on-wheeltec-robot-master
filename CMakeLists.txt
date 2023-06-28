@@ -44,7 +44,7 @@ include_directories(include ${catkin_INCLUDE_DIRS})
 add_executable(udp_robot src/udp_robot.cpp)
 target_link_libraries(udp_robot ${catkin_LIBRARIES})
 
-add_executable(udp_action src/udp_action.cpp)
+add_executable(udp_action src/udp_action.cpp src/udp_action_test.cpp)
 target_link_libraries(udp_action ${catkin_LIBRARIES})
 
 add_executable(test_udp src/test_udp.cpp)

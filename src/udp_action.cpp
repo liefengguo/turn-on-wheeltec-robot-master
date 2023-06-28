@@ -246,11 +246,11 @@ void udp_action::precursor(uint8_t up){
     }
 }
 
-int main(int argc, char** argv)
-{
-    udp_action robot_action;
-    robot_action.main_clean(20);
-    robot_action.precursor(1);
-    // robot_action.cmd_main_clean(2,30);
-    return 0;
-}
+// int main(int argc, char** argv)
+// {
+//     udp_action robot_action;
+//     robot_action.main_clean(20);
+//     robot_action.precursor(1);
+//     // robot_action.cmd_main_clean(2,30);
+//     return 0;
+// }

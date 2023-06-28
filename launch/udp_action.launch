@@ -1,0 +1,15 @@
+<launch>
+  <node name="udp_action" pkg="turn_on_wheeltec_robot" type="udp_action" output="screen">
+    <!-- <param name="robot_ip" value="192.168.100.53"/>  -->
+    <!-- 修改为实际的下位机IP地址 -->
+    <param name="sub_up" value="0"/> 
+    <param name="sub_out" value="0"/> 
+    <param name="sub_clean" value="0"/> 
+        <param name="fan" value="0"/> 
+    <param name="pump" value="0"/> 
+    <param name="precursor" value="0"/> 
+    <param name="main_up" value="0"/> 
+    <param name="main_clean" value="0"/> 
+    <param name="big_light" value="0"/> 
+  </node>
+</launch>

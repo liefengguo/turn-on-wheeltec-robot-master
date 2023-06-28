@@ -23,7 +23,7 @@ struct ChassisData {
     uint16_t batAlarm;
     uint16_t batTemp1;
     uint16_t batTemp2;
-    uint16_t carSpeed;
+    int16_t carSpeed;
     int32_t encoderValue;
     int8_t bodyTemperature;
     int8_t bodyHumidity;
