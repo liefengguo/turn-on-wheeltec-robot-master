@@ -1,123 +1,89 @@
-#include <stdio.h>
-#include <time.h>
-#include <iostream>
-#include <cstring>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include<fstream> 
-#include <sstream>
-#include <algorithm>
-#include <chrono>
-#include <turn_on_wheeltec_robot/Speed.h>
-#include "ros/ros.h"
-#define SERVER_IP "127.0.0.1" // 本地IP地址
-#define SERVER_PORT 8888      // 监听端口号
-uint8_t receivedData[50];
+#include "udp_log.h"
 
-// 定义包含解析数据的结构体
-struct ChassisData {
-    uint16_t batSOC;
-    uint16_t batV;
-    uint16_t batA;
-    uint16_t batAlarm;
-    uint16_t batTemp1;
-    uint16_t batTemp2;
-    int16_t carSpeed;
-    int32_t encoderValue;
-    int8_t bodyTemperature;
-    int8_t bodyHumidity;
-    float angleX;
-    float angleY;
-    float angleZ;
-};
+ChassisParser::ChassisParser() {
+    // 初始化成员变量
+    chassisData = ChassisData();
+    void closeLog();
+    // 生成日志文件名（包含今天的日期）
+    std::stringstream filename;
+    auto now = std::chrono::system_clock::now();
+    std::time_t timestamp = std::chrono::system_clock::to_time_t(now);
+    struct tm* timeinfo = std::localtime(&timestamp);
+    std::string path = "src/turn-on-wheeltec-robot-master/log/";
 
-class ChassisParser {
-public:
-    ChassisParser() {
-        // 初始化成员变量
-        chassisData = ChassisData();
-        void closeLog();
-        // 生成日志文件名（包含今天的日期）
-        std::stringstream filename;
-        auto now = std::chrono::system_clock::now();
-        std::time_t timestamp = std::chrono::system_clock::to_time_t(now);
-        struct tm* timeinfo = std::localtime(&timestamp);
-        std::string path = "src/turn-on-wheeltec-robot-master/log/";
+    filename <<path<< "chassis_log_" << (timeinfo->tm_year + 1900) << "-"
+                << (timeinfo->tm_mon + 1) << "-" << timeinfo->tm_mday << ".txt";
+    std::cout<<"file path :"<<filename.str()<<std::endl;
+    
 
-        filename <<path<< "chassis_log_" << (timeinfo->tm_year + 1900) << "-"
-                 << (timeinfo->tm_mon + 1) << "-" << timeinfo->tm_mday << ".txt";
-        std::cout<<"file path :"<<filename.str()<<std::endl;
-        
+    
 
-        
+    // 打开日志文件
+    logfile.open(filename.str(), std::ios::app);
 
-        // 打开日志文件
-        logfile.open(filename.str(), std::ios::app);
-
-        // 检查文件是否成功打开
-        if (!logfile.is_open()) {
-            std::cerr << "Failed to open log file: " << filename.str() << std::endl;
-        }
+    // 检查文件是否成功打开
+    if (!logfile.is_open()) {
+        std::cerr << "Failed to open log file: " << filename.str() << std::endl;
     }
-    ~ChassisParser() {
-        // 在析构函数中关闭日志文件
-        if (logfile.is_open()) {
-            std::cout<<"close!!!!"<<std::endl;
-            logfile.close();
-        }
+}
+ChassisParser::~ChassisParser() {
+    // 在析构函数中关闭日志文件
+    if (logfile.is_open()) {
+        std::cout<<"close!!!!"<<std::endl;
+        logfile.close();
     }
-    void closeLog() {
-        // 在析构函数中关闭日志文件
-        if (logfile.is_open()) {
-            std::cout<<"close!!!!"<<std::endl;
-            logfile.close();
-        }
+}
+void ChassisParser::closeLog() {
+    // 在析构函数中关闭日志文件
+    if (logfile.is_open()) {
+        std::cout<<"close!!!!"<<std::endl;
+        logfile.close();
+    }
+}
+
+void ChassisParser::logChassisData() {
+    // 检查日志文件是否成功打开
+    if (!logfile.is_open()) {
+        // 处理无法打开日志文件的情况
+        std::cout<<"no open!!!!"<<std::endl;
+        return;
     }
 
-    void logChassisData() {
-        // 检查日志文件是否成功打开
-        if (!logfile.is_open()) {
-            // 处理无法打开日志文件的情况
-            std::cout<<"no open!!!!"<<std::endl;
-            return;
-        }
+    
+    // 获取当前时间
+    std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+    std::time_t timestamp = std::chrono::system_clock::to_time_t(now);
 
-        
-        // 获取当前时间
-        std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-        std::time_t timestamp = std::chrono::system_clock::to_time_t(now);
+    // 将时间戳写入日志文件
+    logfile << "Timestamp: " << std::ctime(&timestamp);
 
-        // 将时间戳写入日志文件
-        logfile << "Timestamp: " << std::ctime(&timestamp);
+    // 将chassisData的变量写入日志文件
+    logfile << "Battery SOC: " << chassisData.batSOC << "%" << std::endl;
+    logfile << "Battery Voltage: " << chassisData.batV << "V" << std::endl;
+    logfile << "Battery Current: " << chassisData.batA << "A" << std::endl;
+    logfile << "Battery Alarm: " << chassisData.batAlarm << std::endl;
+    logfile << "Battery Temperature 1: " << chassisData.batTemp1 << std::endl;
+    logfile << "Battery Temperature 2: " << chassisData.batTemp2 << std::endl;
+    logfile << "Car Speed: " << chassisData.carSpeed << std::endl;
+    logfile << "Encoder Value: " << chassisData.encoderValue << std::endl;
+    logfile << "Body Temperature: " << static_cast<int>(chassisData.bodyTemperature) << std::endl;
+    logfile << "Body Humidity: " << static_cast<int>(chassisData.bodyHumidity) << std::endl;
+    logfile << "Angle X: " << chassisData.angleX << std::endl;
+    logfile << "Angle Y: " << chassisData.angleY << std::endl;
+    logfile << "Angle Z: " << chassisData.angleZ << std::endl;
 
-        // 将chassisData的变量写入日志文件
-        logfile << "Battery SOC: " << chassisData.batSOC << "%" << std::endl;
-        logfile << "Battery Voltage: " << chassisData.batV << "V" << std::endl;
-        logfile << "Battery Current: " << chassisData.batA << "A" << std::endl;
-        logfile << "Battery Alarm: " << chassisData.batAlarm << std::endl;
-        logfile << "Battery Temperature 1: " << chassisData.batTemp1 << std::endl;
-        logfile << "Battery Temperature 2: " << chassisData.batTemp2 << std::endl;
-        logfile << "Car Speed: " << chassisData.carSpeed << std::endl;
-        logfile << "Encoder Value: " << chassisData.encoderValue << std::endl;
-        logfile << "Body Temperature: " << static_cast<int>(chassisData.bodyTemperature) << std::endl;
-        logfile << "Body Humidity: " << static_cast<int>(chassisData.bodyHumidity) << std::endl;
-        logfile << "Angle X: " << chassisData.angleX << std::endl;
-        logfile << "Angle Y: " << chassisData.angleY << std::endl;
-        logfile << "Angle Z: " << chassisData.angleZ << std::endl;
-
-        // 写入日志分隔符
-        logfile << "------------------------" << std::endl;
-        std::cout<<"end!!!!"<<std::endl;
-        if(!logfile){
-            std::cerr<<"failed to write log!!!"<<std::endl;
-        }
-
+    // 写入日志分隔符
+    logfile << "------------------------" << std::endl;
+    std::cout<<"end!!!!"<<std::endl;
+    if(!logfile){
+        std::cerr<<"failed to write log!!!"<<std::endl;
     }
+
+}
     
 
 
-    void parseChassisData() {
+    void ChassisParser::parseChassisData() {
         std::cout<<"parseChassisData!!!!"<<std::endl;
         // 解析电池容量百分比
         chassisData.batSOC = (receivedData[6] << 8) | receivedData[7];
@@ -161,11 +127,6 @@ public:
         // 将解析后的数据存储到日志或执行其他操作
         // ...
     }
-
-public:
-    ChassisData chassisData;
-    std::ofstream logfile;
-};
 
 int main(int argc, char** argv) {
     ros::init(argc, argv, "car_info");
@@ -237,7 +198,7 @@ int main(int argc, char** argv) {
             std::cout << std::endl;
         }
     }
-    
+
     // 关闭套接字
     close(sockfd);
     ros::spin();
