@@ -14,9 +14,6 @@ ChassisParser::ChassisParser() {
     filename <<path<< "chassis_log_" << (timeinfo->tm_year + 1900) << "-"
                 << (timeinfo->tm_mon + 1) << "-" << timeinfo->tm_mday << ".txt";
     std::cout<<"file path :"<<filename.str()<<std::endl;
-    
-
-    
 
     // 打开日志文件
     logfile.open(filename.str(), std::ios::app);
@@ -80,8 +77,6 @@ void ChassisParser::logChassisData() {
     }
 
 }
-    
-
 
     void ChassisParser::parseChassisData() {
         std::cout<<"parseChassisData!!!!"<<std::endl;
@@ -127,11 +122,9 @@ void ChassisParser::logChassisData() {
         // 将解析后的数据存储到日志或执行其他操作
         // ...
     }
-
-
 int main(int argc, char** argv) {
     ros::init(argc, argv, "car_info");
-    ros::NodeHandle n;    
+    ros::NodeHandle n;
     int sockfd;
     struct sockaddr_in serverAddr, clientAddr;
     socklen_t clientAddrLen = sizeof(clientAddr);
@@ -160,8 +153,7 @@ int main(int argc, char** argv) {
     }
 
     std::cout << "UDP server is listening on " << SERVER_IP << ":" << SERVER_PORT << std::endl;
-
-
+	ros::Rate loop_rate(10); 
 
     // 接收数据
     ssize_t numBytesReceived;
@@ -178,10 +170,7 @@ int main(int argc, char** argv) {
         } else {
             std::cout << "Received " << numBytesReceived << " bytes of data from "
                       << inet_ntoa(clientAddr.sin_addr) << ":" << ntohs(clientAddr.sin_port) << std::endl;
-
             // 在这里处理接收到的数据
-            // 可以根据需要进行解析、验证或执行其他操作
-            // 例如，打印接收到的数据内容
             std::cout << "Received data: ";
             for (size_t i = 0; i < numBytesReceived; ++i) {
                 std::cout << std::hex << static_cast<int>(chassisParser.receivedData[i]) << " ";
@@ -190,49 +179,20 @@ int main(int argc, char** argv) {
             chassisParser.logChassisData();
             // chassisParser.closeLog();
             std::vector<int32_t> speedData;
-            speedData.push_back(chassisParser.chassisData.carSpeed*1000);// 换算成mm/s
+            speedData.push_back(chassisParser.chassisData.carSpeed);// 换算成mm/s
 
             speed.speeds = speedData;
             pub_carSpeed.publish(speed);
-
-
             std::cout << std::endl;
         }
+        ros::spinOnce();
+        loop_rate.sleep();//以10Hz循环，循环跑太快就在这里睡一会儿
     }
-
     // 关闭套接字
+    shutdown(sockfd, SHUT_RDWR);
+    ros::shutdown();
     close(sockfd);
     ros::spin();
 
     return 0;
 }
-
-
-// void parseAndSaveChassisData() {
-//     // 获取当前时间
-//     time_t currentTime;
-//     time(&currentTime);
-//     struct tm* timeInfo = localtime(&currentTime);
-
-//     // 打开日志文件
-//     FILE* logFile = fopen("log.txt", "a");
-//     if (logFile == NULL) {
-//         printf("无法打开日志文件。\n");
-//         return;
-//     }
-
-//     // 解析并保存数据
-//     unsigned char receivedData[50]; // 假设接收到的数据存储在receivedData数组中
-
-//     // 保存时间戳
-//     fprintf(logFile, "[%02d:%02d:%02d] Chassis Data:\n", timeInfo->tm_hour, timeInfo->tm_min, timeInfo->tm_sec);
-
-//     // 解析和保存数据
-//     for (unsigned char i = 0; i < 50; i++) {
-//         fprintf(logFile, "%02X ", receivedData[i]);
-//     }
-//     fprintf(logFile, "\n");
-
-//     // 关闭日志文件
-//     fclose(logFile);
-// }

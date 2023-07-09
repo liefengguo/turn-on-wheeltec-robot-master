@@ -3,16 +3,7 @@
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "udp_action");
-    ros::NodeHandle n;    
-    //     <param name="sub_up" value="0"/> 
-    // <param name="sub_out" value="0"/> 
-    // <param name="sub_clean" value="0"/> 
-    //     <param name="fan" value="0"/> 
-    // <param name="pump" value="0"/> 
-    // <param name="precursor" value="0"/> 
-    // <param name="main_up" value="0"/> 
-    // <param name="main_clean" value="0"/> 
-    // <param name="big_light" value="0"/> 
+    ros::NodeHandle n;
     int sub_up,sub_out,sub_clean,fan,pump,precursor,main_up,main_clean,big_light;
 
     n.param<int>("udp_action/sub_up", sub_up, 0);

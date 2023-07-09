@@ -95,8 +95,6 @@ udp_robot::udp_robot(){
     {
         std::cerr << e.what() << '\n';
     }
-    
-  
 }
 
 udp_robot::~udp_robot(){
@@ -129,7 +127,6 @@ udp_robot::~udp_robot(){
 int main(int argc, char** argv)
 {
     ros::init(argc, argv, "udp_command_sender");
-    
     udp_robot Robot_Control;
     ros::spin();
     return 0;
