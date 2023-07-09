@@ -127,6 +127,7 @@ int main(int argc, char** argv) {
     ros::NodeHandle n;
     int sockfd;
     struct sockaddr_in serverAddr, clientAddr;
+    memset(&serverAddr, 0, sizeof(serverAddr));
     socklen_t clientAddrLen = sizeof(clientAddr);
     ChassisParser chassisParser ;
     turn_on_wheeltec_robot::Speed speed ;
