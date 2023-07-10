@@ -1,4 +1,5 @@
 #include "udp_log.h"
+#include <csignal>
 
 ChassisParser::ChassisParser() {
     // 初始化成员变量
@@ -122,6 +123,11 @@ void ChassisParser::logChassisData() {
         // 将解析后的数据存储到日志或执行其他操作
         // ...
     }
+// 信号处理函数
+void signalHandler(int signal) {
+    ros::shutdown();
+    exit(0); // 正常退出程序
+}
 int main(int argc, char** argv) {
     ros::init(argc, argv, "car_info");
     ros::NodeHandle n;
@@ -155,10 +161,11 @@ int main(int argc, char** argv) {
 
     std::cout << "UDP server is listening on " << SERVER_IP << ":" << SERVER_PORT << std::endl;
 	ros::Rate loop_rate(10); 
+    signal(SIGINT, signalHandler);
 
     // 接收数据
     ssize_t numBytesReceived;
-    while (ros::ok) {
+    while (ros::ok()) {
         numBytesReceived = recvfrom(sockfd, chassisParser.receivedData, sizeof(chassisParser.receivedData), 0,
                                     (struct sockaddr *)&clientAddr, &clientAddrLen);
 
@@ -193,7 +200,6 @@ int main(int argc, char** argv) {
     shutdown(sockfd, SHUT_RDWR);
     ros::shutdown();
     close(sockfd);
-    ros::spin();
-
+    // ros::spin();
     return 0;
 }
