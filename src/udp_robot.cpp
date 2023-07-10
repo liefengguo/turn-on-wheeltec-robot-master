@@ -26,7 +26,6 @@ void udp_robot::cmd_main_clean(const std_msgs::Int32::ConstPtr& msg){
     Send_Data.tx[0]=FRAME_HEADER; //frame head 0x7B //帧头0X7B
     Send_Data.tx[1] = FRAME_HEADER_MAIN_CLEAN; //set aside //预留位
     Send_Data.tx[2] = FRAME_HEADER_TRE; //set aside //预留位
-
 }
 void udp_robot::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg){
     short  transition;  //intermediate variable //中间变量
@@ -34,14 +33,12 @@ void udp_robot::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg){
     Send_Data.tx[0]=FRAME_HEADER; //frame head 0x7B //帧头0X7B
     Send_Data.tx[1] = FRAME_HEADER_SEC; //set aside //预留位
     Send_Data.tx[2] = FRAME_HEADER_TRE; //set aside //预留位
-
     //The target velocity of the X-axis of the robot
     //机器人x轴的目标线速度
     transition=0;
     transition = msg->linear.x*1000; //将浮点数放大一千倍，简化传输
     Send_Data.tx[4] = transition;     //取数据的低8位
     Send_Data.tx[3] = transition>>8;  //取数据的高8位
-
     //The target velocity of the Y-axis of the robot
     //机器人y轴的目标线速度
     transition=0;
@@ -74,8 +71,8 @@ void udp_robot::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& msg){
 }
 udp_robot::udp_robot(){
     memset(&Send_Data, 0, sizeof(Send_Data));
-    n.param<std::string>("udp_command_sender/robot_ip", robotIP , "192.168.100.53" );
-    n.param<int>        ("udp_command_sender/robot_port", robotPort, 8888); 
+    n.param<std::string>("udp_robot/robot_ip", robotIP , "192.168.100.53" );
+    n.param<int>        ("udp_robot/robot_port", robotPort, 8888); 
 
     Cmd_Vel_Sub = n.subscribe("cmd_vel", 100, &udp_robot::cmdVelCallback, this); 
     ROS_INFO_STREAM("Data ready"); //Prompt message //提示信息

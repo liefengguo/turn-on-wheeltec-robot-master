@@ -5,10 +5,5 @@
     <param name="robot_ip" value="127.0.0.1"/> 
     <param name="robot_port" value="8888"/> <!-- 修改为实际的下位机UDP端口 -->
   </node>
-    <node name="udp_log" pkg="turn_on_wheeltec_robot" type="udp_log" output="screen">
-    <!-- <param name="robot_ip" value="192.168.100.53"/>  -->
-    <!-- 修改为实际的下位机IP地址 -->
-    <param name="robot_ip" value="127.0.0.1"/> 
-    <param name="robot_port" value="8888"/> <!-- 修改为实际的下位机UDP端口 -->
-  </node>
+
 </launch>
