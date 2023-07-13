@@ -1,5 +1,4 @@
 #include"udp_robot.h"
-#define UDP_PORT 1234 // 修改为实际的UDP端口
 unsigned char udp_robot::Check_Sum(unsigned char Count_Number,unsigned char mode)
 {
   unsigned char check_sum=0,k;

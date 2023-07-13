@@ -5,10 +5,7 @@
 #include "udp_base.h"
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
-
 #include <std_msgs/Int32.h>
-
-
 //The robot chassis class uses constructors to initialize data, publish topics, etc
 //机器人底盘类，使用构造函数初始化数据和发布话题等
 class udp_robot

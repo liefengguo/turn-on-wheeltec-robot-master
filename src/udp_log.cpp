@@ -63,7 +63,7 @@ void ChassisParser::logChassisData() {
     logfile << "Battery Temperature 1: " << chassisData.batTemp1 << std::endl;
     logfile << "Battery Temperature 2: " << chassisData.batTemp2 << std::endl;
     logfile << "Car Speed: " << chassisData.carSpeed << std::endl;
-    logfile << "Encoder Value: " << chassisData.encoderValue << std::endl;
+    logfile << "Encoder Value: " << chassisData.encoderValue  << std::endl;
     logfile << "Body Temperature: " << static_cast<int>(chassisData.bodyTemperature) << std::endl;
     logfile << "Body Humidity: " << static_cast<int>(chassisData.bodyHumidity) << std::endl;
     logfile << "Angle X: " << chassisData.angleX << std::endl;
@@ -78,7 +78,9 @@ void ChassisParser::logChassisData() {
     }
 
 }
-
+    float ChassisParser::get_angular(){
+        return (chassisData.encoderValue - 133120) * 38.6 /11793 ;
+    } 
     void ChassisParser::parseChassisData() {
         std::cout<<"parseChassisData!!!!"<<std::endl;
         // 解析电池容量百分比
@@ -119,9 +121,6 @@ void ChassisParser::logChassisData() {
 
         // 解析倾角Z
         chassisData.angleZ = (float)(((int32_t)(receivedData[34] << 24) | (receivedData[35] << 16) | (receivedData[36] << 8) | receivedData[37])) / 100.0;
-
-        // 将解析后的数据存储到日志或执行其他操作
-        // ...
     }
 // 信号处理函数
 void signalHandler(int signal) {
@@ -135,8 +134,8 @@ int main(int argc, char** argv) {
     struct sockaddr_in serverAddr, clientAddr;
     memset(&serverAddr, 0, sizeof(serverAddr));
     socklen_t clientAddrLen = sizeof(clientAddr);
-    ChassisParser chassisParser ;
-    turn_on_wheeltec_robot::Speed speed ;
+    ChassisParser chassisParser;
+    turn_on_wheeltec_robot::Speed speed;
     ros::Publisher pub_carSpeed = n.advertise<turn_on_wheeltec_robot::Speed>("/fixposition/speed",10);
 
     // 创建UDP套接字

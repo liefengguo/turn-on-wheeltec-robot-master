@@ -1,7 +1,5 @@
 #ifndef __UDP_LOG_H_
 #define __UDP_LOG_H_
-
-
 #include <stdio.h>
 #include <time.h>
 #include <iostream>
@@ -9,7 +7,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include<fstream> 
+#include <fstream> 
 #include <sstream>
 #include <algorithm>
 #include <chrono>
@@ -41,6 +39,7 @@ public:
     void closeLog();
     void logChassisData();  
     void parseChassisData();
+    float  get_angular();
 
     
 public:
