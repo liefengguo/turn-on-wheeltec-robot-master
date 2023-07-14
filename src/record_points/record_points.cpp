@@ -54,7 +54,6 @@ int main(int argc, char** argv)
     ros::Subscriber position_sub = nh.subscribe("/fixposition/odometry", 1, callbackPosition);
     fp = fopen((file_path_+file_name_).c_str(),"w");
     ros::Rate loop_rate(1);
-
     while(ros::ok())
     {
         ros::spinOnce();
