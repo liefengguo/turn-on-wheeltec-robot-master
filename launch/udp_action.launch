@@ -8,7 +8,7 @@
         <param name="fan" value="0"/> 
     <param name="pump" value="0"/> 
     <param name="precursor" value="0"/> 
-    <param name="main_up" value="0"/> 
+    <param name="main_up" value="0"/>
     <param name="main_clean" value="0"/> 
     <param name="big_light" value="0"/> 
   </node>

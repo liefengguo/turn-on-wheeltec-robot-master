@@ -16,7 +16,6 @@ FILE *fp;
 string file_path_ = "/home/chen/ros_work/lidar/src/control_publisher/";
 string file_name_ = "GPS_ENU.txt";
 
-
 void callbackPosition(const nav_msgs::Odometry& msgs)
 {
     double position_x = msgs.pose.pose.position.x;

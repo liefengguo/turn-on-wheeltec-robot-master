@@ -23,7 +23,7 @@ unsigned char udp_action::Check_Sum(unsigned char Count_Number,unsigned char mod
 udp_action::udp_action(){
     memset(&Send_Data, 0, sizeof(Send_Data));
     robotPort = 8888;
-    robotIP = "127.0.0.1";
+    robotIP = "192.168.100.53";
 
 
     udpSocket = socket(AF_INET, SOCK_DGRAM, 0);
