@@ -73,15 +73,22 @@ add_executable(six_a22 src/serial_connect/six_a22_node.cpp src/serial_connect/ad
 target_link_libraries(six_a22
   ${catkin_LIBRARIES}
 )
+add_dependencies(six_a22 ${PROJECT_NAME}_generate_messages_cpp)
+
 add_executable(radar src/serial_connect/radar.cpp) 
+add_dependencies(radar ${PROJECT_NAME}_generate_messages_cpp)
+
 target_link_libraries(radar
   ${catkin_LIBRARIES}
 )
 add_executable(RadarController src/radar_controller/RadarController.cpp src/radar_controller/RadarController_node.cpp 
                 src/radar_controller/VRFKReader.cpp src/serial_connect/six_decition_radar.cpp src/serial_connect/adaptive_filter.cpp)
+add_dependencies(RadarController ${PROJECT_NAME}_generate_messages_cpp)
 target_link_libraries(RadarController
   ${catkin_LIBRARIES}
 )
+
+
 # add_executable(udp_log src/udp_log.cpp src/udp_car_info.cpp)
 # target_link_libraries(udp_log ${catkin_LIBRARIES})
 

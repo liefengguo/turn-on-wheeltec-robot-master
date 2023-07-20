@@ -1,0 +1,12 @@
+<launch>
+  <!-- <arg name="file_path" default="$(find position_saver_node)/output/position.txt" /> -->
+  <!-- <arg name="topic_name" default="/djiros/rtk_position" /> -->
+  <!-- <arg name="topic_name" default="/fixposition/navsatfix" /> -->
+
+  <!-- <node pkg="serial_connect" type="six_a22_radar" name="six_a22_radar" output="screen">
+    <param name="SERIAL_PORT" value="/dev/ttyUSB0" />
+  </node> -->
+  <node pkg="turn_on_wheeltec_robot" type="six_a22" name="six_a22" output="screen">
+  <param name="SERIAL_PORT" value="/dev/ttyUSB0" />
+  </node>
+</launch>
