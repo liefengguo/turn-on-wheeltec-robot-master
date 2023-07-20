@@ -18,11 +18,15 @@ find_package(catkin REQUIRED COMPONENTS
 )
 add_message_files(
   FILES
+  a22_data.msg
+  VRTK.msg
   Speed.msg
 )
 generate_messages(
    DEPENDENCIES
    std_msgs
+   nav_msgs
+   geometry_msgs
 )
 
 # ulimit -c unlimited
@@ -52,6 +56,7 @@ target_link_libraries(test_udp ${catkin_LIBRARIES})
 
 add_executable(udp_log src/udp_log.cpp)
 target_link_libraries(udp_log ${catkin_LIBRARIES})
+add_dependencies(udp_log ${PROJECT_NAME}_generate_messages_cpp)
 
 
 add_executable(record_points src/record_points/record_points.cpp src/tools/gnss_coordinate_convert.cpp)
@@ -63,6 +68,20 @@ target_link_libraries(purepursuit ${catkin_LIBRARIES})
 add_executable(referenceline_points src/referenceline_points/referenceline_points.cpp)
 target_link_libraries(referenceline_points ${catkin_LIBRARIES})
 
+
+add_executable(six_a22 src/serial_connect/six_a22_node.cpp src/serial_connect/add_CRC.cpp)
+target_link_libraries(six_a22
+  ${catkin_LIBRARIES}
+)
+add_executable(radar src/serial_connect/radar.cpp) 
+target_link_libraries(radar
+  ${catkin_LIBRARIES}
+)
+add_executable(RadarController src/radar_controller/RadarController.cpp src/radar_controller/RadarController_node.cpp 
+                src/radar_controller/VRFKReader.cpp src/serial_connect/six_decition_radar.cpp src/serial_connect/adaptive_filter.cpp)
+target_link_libraries(RadarController
+  ${catkin_LIBRARIES}
+)
 # add_executable(udp_log src/udp_log.cpp src/udp_car_info.cpp)
 # target_link_libraries(udp_log ${catkin_LIBRARIES})
 
