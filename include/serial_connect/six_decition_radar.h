@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream> 
 #include <sstream>
+#include <boost/shared_ptr.hpp>
 using namespace turn_on_wheeltec_robot;
 
 class DistanceSensor {

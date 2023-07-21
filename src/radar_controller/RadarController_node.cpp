@@ -2,10 +2,10 @@
 
 int main(int argc, char** argv) {
     ros::init(argc, argv, "radarController");
-    VRFKReader vrtkReader;
+    VRFKReaderPtr vrtkReader = boost::make_shared<VRFKReader>();
     DistanceSensor sensor;
     RadarController radar_controller;
-    ros::Rate loop_rate(20); 
+    ros::Rate loop_rate(20);
     while (ros::ok())
     {
         if(sensor.sub_.getNumPublishers() != 0){                    // 判断是否有接收到超声波话题
@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
             radar_controller.setRadar4(sensor.getFilteredDistance3());
             radar_controller.setRadar5(sensor.getFilteredDistance4());
             radar_controller.setRadar6(sensor.getFilteredDistance5());
-            radar_controller.setGNSSStatus(vrtkReader.getGNSSStatus());
+            radar_controller.setGNSSStatus(vrtkReader->getGNSSStatus());
             radar_controller.controlByRadar();
         }
         ros::spinOnce();

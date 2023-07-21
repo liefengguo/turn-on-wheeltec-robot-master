@@ -19,6 +19,7 @@ private:
     geometry_msgs::Twist vel_msg;
     int distanceThreshold;
     int targetDistance;
+    
     void turnLeft();
     void turnRight();
     int flag;

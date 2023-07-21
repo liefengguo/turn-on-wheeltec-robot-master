@@ -31,5 +31,5 @@ public:
     int16_t getWheelspeedStatus() const;
     std::string getVersion() const;
 };
-
+typedef boost::shared_ptr<VRFKReader> VRFKReaderPtr;
 #endif  // VRFKREADER_H

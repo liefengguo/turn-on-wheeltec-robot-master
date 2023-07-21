@@ -62,7 +62,7 @@ add_dependencies(udp_log ${PROJECT_NAME}_generate_messages_cpp)
 add_executable(record_points src/record_points/record_points.cpp src/tools/gnss_coordinate_convert.cpp)
 target_link_libraries(record_points ${catkin_LIBRARIES})
 
-add_executable(purepursuit src/purepursuit/purepursuit.cpp src/tools/gnss_coordinate_convert.cpp)
+add_executable(purepursuit src/purepursuit/pure_pursuit.cpp src/tools/gnss_coordinate_convert.cpp)
 target_link_libraries(purepursuit ${catkin_LIBRARIES})
 
 add_executable(referenceline_points src/referenceline_points/referenceline_points.cpp)
