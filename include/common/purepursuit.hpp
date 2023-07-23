@@ -27,6 +27,9 @@ public:
     PurePursuit();
     ~PurePursuit();
     void run();
+    double getDegree();
+    double getVel();
+
 private:
     void poseCallback(const nav_msgs::Odometry &currentWaypoint);
     void pointCallback(const nav_msgs::Path &msg);

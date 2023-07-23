@@ -18,10 +18,15 @@ private:
     double linear_x;
     geometry_msgs::Twist vel_msg;
     int distanceThreshold;
+    int distanceMax_radar2;
     int targetDistance;
+    double path_degree;
+    double path_vel;
     
     void turnLeft();
     void turnRight();
+    void turnLeft_curva();
+    void turnRight_curva();
     int flag;
     bool log_flag;
     std::ofstream logfile;
@@ -39,6 +44,8 @@ public:
     void setRadar4(int value);
     void setRadar5(int value);
     void setRadar6(int value);
+    void setPath_degree(double degree_);
+    void setPath_vel(double vel_);
 
 };
 

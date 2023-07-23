@@ -2,11 +2,11 @@
 
 DistanceSensor::DistanceSensor() {
     sub_ = nh_.subscribe("a22_radar", 1, &DistanceSensor::distanceCallback, this);
-    nh_.param<int>("six_decition_radar/targetDistance", targetDistance, 230);
-    nh_.param<int>("six_decition_radar/distanceThreshold", distanceThreshold, 80);
-    nh_.param<int>("RadarController/bufferSize", bufferSize, 20);
-    nh_.param<int>("RadarController/threshold", threshold, 5000);
-    nh_.param<int>("RadarController/log_flag", log_flag, 1);
+    nh_.param<int>("targetDistance", targetDistance, 230);
+    nh_.param<int>("distanceThreshold", distanceThreshold, 80);
+    nh_.param<int>("bufferSize", bufferSize, 20);
+    nh_.param<int>("threshold", threshold, 5000);
+    nh_.param<int>("log_flag", log_flag, 1);
     if(log_flag){
         std::string path = "/home/glf/log/";
         std::stringstream  filename;
@@ -54,12 +54,12 @@ void DistanceSensor::distanceCallback(const a22_data::ConstPtr& msg) {
             std::cout<<"no open!!!!"<<std::endl;
             // return;
     }
-        // logfile << distance_[0] << " ";
-        // logfile << distance_[1] << " ";
-        // logfile << distance_[2] << " ";
-        // logfile << distance_[3] << " ";
-        // logfile << distance_[4] << " ";
-        // logfile << distance_[5] << std::endl;
+        logfile << distance_[0] << " ";
+        logfile << distance_[1] << " ";
+        logfile << distance_[2] << " ";
+        logfile << distance_[3] << " ";
+        logfile << distance_[4] << " ";
+        logfile << distance_[5] << " ";
         logfile << filteredDistance0 << " ";
         logfile << filteredDistance1 << " ";
         logfile << filteredDistance2 << " ";
@@ -95,12 +95,3 @@ int DistanceSensor::getFilteredDistance0() const {
 }
 
 
-// int main(int argc, char** argv) {
-//     ros::init(argc, argv, "distance_monitor");
-//     ros::NodeHandle nh;
-
-//     DistanceSensor sensor;
-//     ros::spin();
-
-//     return 0;
-// }

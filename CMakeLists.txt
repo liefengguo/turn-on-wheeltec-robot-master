@@ -58,11 +58,10 @@ add_executable(udp_log src/udp_log.cpp)
 target_link_libraries(udp_log ${catkin_LIBRARIES})
 add_dependencies(udp_log ${PROJECT_NAME}_generate_messages_cpp)
 
-
 add_executable(record_points src/record_points/record_points.cpp src/tools/gnss_coordinate_convert.cpp)
 target_link_libraries(record_points ${catkin_LIBRARIES})
 
-add_executable(purepursuit src/purepursuit/pure_pursuit.cpp src/tools/gnss_coordinate_convert.cpp)
+add_executable(purepursuit src/purepursuit/pure_pursuit_node.cpp src/purepursuit/pure_pursuit.cpp src/tools/gnss_coordinate_convert.cpp)
 target_link_libraries(purepursuit ${catkin_LIBRARIES})
 
 add_executable(referenceline_points src/referenceline_points/referenceline_points.cpp)
@@ -74,6 +73,13 @@ target_link_libraries(six_a22
   ${catkin_LIBRARIES}
 )
 add_dependencies(six_a22 ${PROJECT_NAME}_generate_messages_cpp)
+
+
+add_executable(six_decition_radar_node src/serial_connect/six_decition_radar_node 
+      src/serial_connect/six_decition_radar.cpp src/serial_connect/adaptive_filter.cpp)
+target_link_libraries(six_decition_radar_node
+  ${catkin_LIBRARIES}
+)
 
 add_executable(radar src/serial_connect/radar.cpp) 
 add_dependencies(radar ${PROJECT_NAME}_generate_messages_cpp)
@@ -88,6 +94,11 @@ target_link_libraries(RadarController
   ${catkin_LIBRARIES}
 )
 
+add_executable(main_node src/main_node.cpp src/purepursuit/pure_pursuit.cpp   src/radar_controller/RadarController.cpp 
+ src/tools/gnss_coordinate_convert.cpp
+src/radar_controller/VRFKReader.cpp src/serial_connect/six_decition_radar.cpp src/serial_connect/adaptive_filter.cpp)
+target_link_libraries(main_node ${catkin_LIBRARIES})
+add_dependencies(main_node ${EXTRA_LIBS} ${PROJECT_NAME}_generate_messages_cpp)
 
 # add_executable(udp_log src/udp_log.cpp src/udp_car_info.cpp)
 # target_link_libraries(udp_log ${catkin_LIBRARIES})

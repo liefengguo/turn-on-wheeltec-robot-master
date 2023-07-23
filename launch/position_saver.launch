@@ -5,7 +5,8 @@
 
   <node pkg="turn_on_wheeltec_robot" type="record_points" name="record_points" output="screen">
     <param name="file_path" value="$(find turn_on_wheeltec_robot)/output/" />
-    <param name="file_name" value="GPS_ENU.txt" />
+    <!-- <param name="file_name" value="GPS_ENU.txt" /> -->
+    <param name="file_name" value="wandao.txt" />
     <!-- <param name="topic_name" value="/fixposition/navsatfix" /> -->
     <param name="topic_name" value="/djiros/rtk_position" />
     <param name="save_interval" value="1.0" />

@@ -3,7 +3,7 @@
    Coulter, Implementation of the pure pursuit algoritm, 1992 and 
    Sorniotti et al. Path tracking for Automated Driving, 2017.
 */
-#include "../../include/common/purepursuit.h"
+#include "../../include/common/purepursuit.hpp"
 
 PurePursuit::PurePursuit() : lookahead_distance_(1.0), v_max_(0.3), car_vel(v_max_), w_max_(1.0), index(0),
                              goal_reached_(false), nh_private_("~")
@@ -118,7 +118,8 @@ void PurePursuit::pointCallback(const nav_msgs::Path &msg) {
     r_y_.push_back(msg.poses[i].pose.position.y);
   }
 }
-
+double PurePursuit::getDegree(){return degree;}
+double PurePursuit::getVel(){return car_vel;}
 
 //计算发送给模型车的转角
 void PurePursuit::poseCallback(const nav_msgs::Odometry &currentWaypoint) {
@@ -308,12 +309,3 @@ void PurePursuit::run()
   ros::spin();
 }
 
-int main(int argc, char**argv)
-{
-  ros::init(argc, argv, "pure_pursuit");
-
-  PurePursuit controller;
-  controller.run();
-
-  return 0;
-}

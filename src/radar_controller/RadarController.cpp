@@ -2,12 +2,13 @@
 
 RadarController::RadarController() {
     radar_cmd_vel = nh.advertise<geometry_msgs::Twist>("/cmd_vel", 20);
-    nh.param<int>("RadarController/targetDistance", targetDistance, 230);
-    nh.param<int>("RadarController/distanceThreshold", distanceThreshold, 80);
-    nh.param<double>("RadarController/angular_z", angular_z, 0.08);
-    nh.param<double>("RadarController/linear_x", linear_x, 0.3);
-    nh.param<int>("RadarController/flag", flag, 1);
-    nh.param<bool>("RadarController/log_flag", log_flag, 1);
+    nh.param<int>("targetDistance", targetDistance, 230);
+    nh.param<int>("distanceThreshold", distanceThreshold, 80);
+    nh.param<double>("angular_z", angular_z, 0.08);
+    nh.param<double>("linear_x", linear_x, 0.3);
+    nh.param<int>("flag", flag, 1);
+    nh.param<bool>("log_flag", log_flag, 1);
+    nh.param<int>("distanceMax_radar2", distanceMax_radar2, 300);
     if(log_flag){
         std::string path = "/home/glf/log/";
         std::stringstream  filename;
@@ -78,7 +79,7 @@ void RadarController::setRadar6(int value) {
 
 void RadarController::turnLeft() {
     vel_msg.angular.z = -angular_z;  // 设置负角速度以左转
-    vel_msg.linear.x = linear_x;
+    vel_msg.linear.x = path_vel;
     radar_cmd_vel.publish(vel_msg);
     if(log_flag){
         logfile << vel_msg.angular.z << std::endl;
@@ -86,7 +87,27 @@ void RadarController::turnLeft() {
 }
 void RadarController::turnRight() {
     vel_msg.angular.z = angular_z;  // 设置正角速度以右转
-    vel_msg.linear.x = linear_x;
+    vel_msg.linear.x = path_vel;
+    radar_cmd_vel.publish(vel_msg);
+    if(log_flag){
+        logfile << vel_msg.angular.z << std::endl;
+    }
+}
+void RadarController::turnLeft_curva() {
+    // if (path_degree >0){
+        vel_msg.angular.z = path_degree* 0.5 / 38.6 - 0.1 ;  // 设置负角速度以左转
+    // } else{
+        // vel_msg.angular.z = path_degree* 0.5 / 38.6 - 0.1 ;  // 设置负角速度以左转
+    // }
+    vel_msg.linear.x = path_vel;
+    radar_cmd_vel.publish(vel_msg);
+    if(log_flag){
+        logfile << vel_msg.angular.z << std::endl;
+    }
+}
+void RadarController::turnRight_curva() {
+    vel_msg.angular.z = path_degree* 0.5 / 38.6 + 0.1;  // 设置正角速度以右转
+    vel_msg.linear.x = path_vel;
     radar_cmd_vel.publish(vel_msg);
     if(log_flag){
         logfile << vel_msg.angular.z << std::endl;
@@ -103,7 +124,7 @@ void RadarController::line_controlByRadar(){
         // std::cout<<"radar2: "<<radar2<<" targetDistance + distanceThreshold: "<<targetDistance + distanceThreshold<<std::endl;
     } else {
         vel_msg.angular.z = 0;
-        vel_msg.linear.x = linear_x;
+        vel_msg.linear.x = path_vel;
         radar_cmd_vel.publish(vel_msg);
         std::cout<< "OK! go "<<std::endl;
         // std::cout<<"radar2: "<<radar2<<" targetDistance - distanceThreshold: "<<targetDistance - distanceThreshold<<std::endl;
@@ -115,14 +136,14 @@ void RadarController::line_controlByRadar(){
 void RadarController::curvature_controlByRadar(){
     if (radar2 < targetDistance - distanceThreshold ) {
         std::cout<< "距离过近，left:"<<std::endl;
-        turnLeft();
+        turnLeft_curva();
         // std::cout<<"radar2: "<<radar2<<" targetDistance - distanceThreshold: "<<targetDistance - distanceThreshold<<std::endl;
     } else if (radar2 > targetDistance + distanceThreshold) {
-        turnRight();
+        turnRight_curva();
         std::cout<< "distance too far， right please!!"<<std::endl;
         // std::cout<<"radar2: "<<radar2<<" targetDistance + distanceThreshold: "<<targetDistance + distanceThreshold<<std::endl;
     } else {
-        vel_msg.angular.z = 0;
+        vel_msg.angular.z = path_degree* 0.5 / 38.6;
         vel_msg.linear.x = linear_x;
         radar_cmd_vel.publish(vel_msg);
         std::cout<< "OK! go "<<std::endl;
@@ -134,11 +155,26 @@ void RadarController::curvature_controlByRadar(){
 }
 void RadarController::controlByRadar() {
     if (gnss_status < 7 || flag) {
-        line_controlByRadar();
-
+        if( abs(path_degree) < 12 || path_degree == 0){
+            if (radar2 < distanceMax_radar2){
+                line_controlByRadar();
+            }
+        }else if(abs(path_degree) >= 12){
+            curvature_controlByRadar();
+        }
     } else {
         // RTK is not good, use alternative control method
         // Add your code here for alternative control method
     }
+    // if ()
+    std::cout<<"path_degree:" << path_degree<<std::endl;
+
+
 }
 
+void RadarController::setPath_degree(double degree_){
+    path_degree = degree_;
+}
+void RadarController::setPath_vel(double vel_){
+    path_vel = vel_;
+}
