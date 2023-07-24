@@ -46,6 +46,7 @@ public:
     void setRadar6(int value);
     void setPath_degree(double degree_);
     void setPath_vel(double vel_);
+    void setLog_cur_time();
 
 };
 

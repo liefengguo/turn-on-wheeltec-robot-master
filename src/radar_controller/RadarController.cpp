@@ -8,11 +8,18 @@ RadarController::RadarController() {
     nh.param<double>("linear_x", linear_x, 0.3);
     nh.param<int>("flag", flag, 1);
     nh.param<bool>("log_flag", log_flag, 1);
-    nh.param<int>("distanceMax_radar2", distanceMax_radar2, 300);
+    nh.param<int>("distanceMax_radar2", distanceMax_radar2, 399);
     if(log_flag){
         std::string path = "/home/glf/log/";
         std::stringstream  filename;
-        filename <<path<< "radarController"  << ".txt";
+        auto now = std::chrono::system_clock::now();
+        std::time_t timestamp = std::chrono::system_clock::to_time_t(now);
+        struct tm* timeinfo = std::localtime(&timestamp);
+
+        filename <<path<< "radarController" << (timeinfo->tm_mon + 1) 
+        << "-" << timeinfo->tm_mday<<"-" << timeinfo->tm_hour <<"-" << timeinfo->tm_min
+                     << ".txt";
+        // filename <<path<< "radarController"  << ".txt";
         std::cout<<"file path :"<<filename.str()<<std::endl;
         // 打开日志文件
         logfile.open(filename.str(), std::ios::app);
@@ -31,12 +38,18 @@ RadarController::~RadarController() {
         }
     }
 }
+void RadarController::setLog_cur_time(){
+    auto now = std::chrono::system_clock::now();
+    std::time_t cur_timestamp = std::chrono::system_clock::to_time_t(now);
+    logfile << cur_timestamp << " ";
+}
 void RadarController::setGNSSStatus(int status) {
     gnss_status = status;
 }
 void RadarController::setRadar1(int value) {
     radar1 = value;
     if(log_flag){
+        setLog_cur_time();
         logfile << value << " ";
     }
 
@@ -158,6 +171,10 @@ void RadarController::controlByRadar() {
         if( abs(path_degree) < 12 || path_degree == 0){
             if (radar2 < distanceMax_radar2){
                 line_controlByRadar();
+            } else {
+                if(log_flag){
+                    logfile << -1 << std::endl;
+                }
             }
         }else if(abs(path_degree) >= 12){
             curvature_controlByRadar();

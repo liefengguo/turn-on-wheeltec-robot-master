@@ -104,11 +104,17 @@ PurePursuit::PurePursuit() : lookahead_distance_(1.0), v_max_(0.3), car_vel(v_ma
 
 
   if (log_flag){
-  filename <<pure_pursuit_log_path<< "cmd_z"  << ".txt";
+  auto now = std::chrono::system_clock::now();
+  std::time_t timestamp = std::chrono::system_clock::to_time_t(now);
+  struct tm* timeinfo = std::localtime(&timestamp);
+
+  filename <<pure_pursuit_log_path<< "cmd_z" << (timeinfo->tm_mon + 1) 
+  << "-" << timeinfo->tm_mday<<"-" << timeinfo->tm_hour <<"-" << timeinfo->tm_min
+                << ".txt";
   std::cout<<"file path :"<<filename.str()<<std::endl;
   // 打开日志文件
   logfile.open(filename.str(), std::ios::app);
-}
+  }
 }
 void PurePursuit::pointCallback(const nav_msgs::Path &msg) {
   pointNum = msg.poses.size();
@@ -194,18 +200,21 @@ void PurePursuit::poseCallback(const nav_msgs::Odometry &currentWaypoint) {
       degree = theta * 180 / M_PI;
       degree = max(min(38.6, -degree), -38.6);
       double theta_send = degree * 0.5 / 38.6;
-      car_vel *= std::abs(cos(theta_send));
+      // car_vel *= std::abs(cos(theta_send));
       double curYaw_deg = currentPositionYaw * 180 / M_PI;
 
-      cout<<"alpha: "<<alpha* 180 /M_PI<<" degree"<<-degree<<" dis: "<<dl<<"  index:"<<index<<"x: "<<r_x_[index]<<"y: "<<r_y_[index]<<endl;
+      cout<<"alpha: "<<alpha* 180 /M_PI<<" degree"<<degree<<" dis: "<<dl<<"  index:"<<index<<"x: "<<r_x_[index]<<"y: "<<r_y_[index]<<endl;
       cout<<"curr_yaw"<< curYaw_deg <<" alpha_two_point:" << alpha_two_point * 180 / M_PI<<endl;
       if(log_flag){
-          if (!logfile.is_open()) {
-              // 处理无法打开日志文件的情况
-              std::cout<<"no open!!!!"<<std::endl;
-              // return;
-      }
-          logfile << theta_send <<  std::endl;
+        if (!logfile.is_open()) {
+            // 处理无法打开日志文件的情况
+            std::cout<<"no open!!!!"<<std::endl;
+            // return;
+        }
+        auto now = std::chrono::system_clock::now();
+        std::time_t cur_timestamp = std::chrono::system_clock::to_time_t(now);
+        logfile << cur_timestamp << " " << currentPositionX << " " << currentPositionY << " " <<curYaw_deg 
+                <<" "<< r_x_[index] <<" "<< r_y_[index]<<" " << degree << " "<< dl <<  std::endl;
       }
       geometry_msgs::Twist vel_msg;
       vel_msg.linear.x = 0.3;

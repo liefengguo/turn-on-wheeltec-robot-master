@@ -10,8 +10,17 @@ DistanceSensor::DistanceSensor() {
     if(log_flag){
         std::string path = "/home/glf/log/";
         std::stringstream  filename;
-        filename <<path<< "chaoshengbo"  << ".txt";
+        auto now = std::chrono::system_clock::now();
+        std::time_t timestamp = std::chrono::system_clock::to_time_t(now);
+        struct tm* timeinfo = std::localtime(&timestamp);
+
+        filename <<path<< "chaoshengbo_log_" << (timeinfo->tm_mon + 1) 
+        << "-" << timeinfo->tm_mday<<"-" << timeinfo->tm_hour <<"-" << timeinfo->tm_min
+                     << ".txt";
         std::cout<<"file path :"<<filename.str()<<std::endl;
+
+        // filename <<path<< "chaoshengbo"  << ".txt";
+        // std::cout<<"file path :"<<filename.str()<<std::endl;
         // 打开日志文件
         logfile.open(filename.str(), std::ios::app);
     }
