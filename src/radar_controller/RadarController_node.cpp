@@ -16,6 +16,8 @@ int main(int argc, char** argv) {
             radar_controller.setRadar5(sensor.getFilteredDistance4());
             radar_controller.setRadar6(sensor.getFilteredDistance5());
             radar_controller.setGNSSStatus(vrtkReader->getGNSSStatus());
+            radar_controller.setPath_degree(0);
+            radar_controller.setPath_vel(0.3);
             radar_controller.controlByRadar();
         }
         ros::spinOnce();

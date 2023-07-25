@@ -14,7 +14,7 @@ PurePursuit::PurePursuit() : lookahead_distance_(1.0), v_max_(0.3), car_vel(v_ma
   nh_private_.param<double>("position_tolerance", position_tolerance_, 0.1);
   nh_private_.param<double>("steering_angle_limit", delta_max_, 1);
   nh_private_.param<double>("car_vel", car_vel, 0.4);
-  nh_private_.param<double>("lookahead_distance", lookahead_distance_, 1);
+  nh_private_.param<double>("lookahead_distance", lookahead_distance_, 3);
   nh_private_.param<string>("pure_pursuit_log_path", pure_pursuit_log_path, "/home/glf/log/");
   pointNum = 0;
   // targetIndex = pointNum - 1;

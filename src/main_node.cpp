@@ -20,6 +20,7 @@ int main(int argc, char**argv){
             radar_controller.setRadar6(sensor.getFilteredDistance5());
             radar_controller.setGNSSStatus(vrtkReader.getGNSSStatus());
             radar_controller.setPath_degree(controller_path.getDegree());
+            radar_controller.setPath_vel(controller_path.getVel());
             radar_controller.controlByRadar();
         }
 

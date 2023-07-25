@@ -20,6 +20,7 @@ private:
     int distanceThreshold;
     int distanceMax_radar2;
     int targetDistance;
+    int curvaDistance;
     double path_degree;
     double path_vel;
     
