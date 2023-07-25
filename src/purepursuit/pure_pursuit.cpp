@@ -11,7 +11,7 @@ PurePursuit::PurePursuit() : lookahead_distance_(1.0), v_max_(0.3), car_vel(v_ma
   // Get parameters from the parameter server
   nh_private_.param<bool>("log_flag", log_flag, 1);
   nh_private_.param<double>("max_rotational_velocity", w_max_, 1);
-  nh_private_.param<double>("position_tolerance", position_tolerance_, 0.1);
+  nh_private_.param<double>("position_tolerance", position_tolerance_, 0.6);
   nh_private_.param<double>("steering_angle_limit", delta_max_, 1);
   nh_private_.param<double>("car_vel", car_vel, 0.4);
   nh_private_.param<double>("lookahead_distance", lookahead_distance_, 3);
@@ -194,7 +194,7 @@ void PurePursuit::poseCallback(const nav_msgs::Odometry &currentWaypoint) {
     float dl = sqrt(pow(r_y_[index] - currentPositionY, 2) +
                     pow(r_x_[index] - currentPositionX, 2));
     // 发布小车运动指令及运动轨迹
-    if (dl > 0.15) {
+    if (dl > position_tolerance_) {
       car_vel = 0.3;
       float theta = atan(2 * Ld * sin(alpha) / dl);
       degree = theta * 180 / M_PI;
