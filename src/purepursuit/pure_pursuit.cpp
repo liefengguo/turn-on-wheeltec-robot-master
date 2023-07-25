@@ -195,12 +195,10 @@ void PurePursuit::poseCallback(const nav_msgs::Odometry &currentWaypoint) {
                     pow(r_x_[index] - currentPositionX, 2));
     // 发布小车运动指令及运动轨迹
     if (dl > position_tolerance_) {
-      car_vel = 0.3;
       float theta = atan(2 * Ld * sin(alpha) / dl);
       degree = theta * 180 / M_PI;
       degree = max(min(38.6, -degree), -38.6);
       double theta_send = degree * 0.5 / 38.6;
-      // car_vel *= std::abs(cos(theta_send));
       double curYaw_deg = currentPositionYaw * 180 / M_PI;
 
       cout<<"alpha: "<<alpha* 180 /M_PI<<" degree"<<degree<<" dis: "<<dl<<"  index:"<<index<<"x: "<<r_x_[index]<<"y: "<<r_y_[index]<<endl;
@@ -217,7 +215,7 @@ void PurePursuit::poseCallback(const nav_msgs::Odometry &currentWaypoint) {
                 <<" "<< r_x_[index] <<" "<< r_y_[index]<<" " << degree << " "<< dl <<  std::endl;
       }
       geometry_msgs::Twist vel_msg;
-      vel_msg.linear.x = 0.3;
+      vel_msg.linear.x = car_vel;
       vel_msg.angular.z = theta_send;
       pub_vel_.publish(vel_msg);
       // 发布小车运动轨迹
