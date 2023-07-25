@@ -21,7 +21,7 @@ PurePursuit::PurePursuit() : lookahead_distance_(1.0), v_max_(0.3), car_vel(v_ma
 
   path_loaded_ = false;
   splinePath_sub = nh_.subscribe("/splinepoints", 1, &PurePursuit::pointCallback, this);
-  carPose_sub = nh_.subscribe("/fixposition/odometry", 1, &PurePursuit::poseCallback, this);
+  carPose_sub = nh_.subscribe("/odom", 1, &PurePursuit::poseCallback, this);
 
   pub_vel_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
   marker_pub = nh_.advertise<visualization_msgs::Marker>("coordinate_marker", 10);
@@ -138,23 +138,23 @@ void PurePursuit::poseCallback(const nav_msgs::Odometry &currentWaypoint) {
 
   geometry_msgs::TransformStamped transformStamped;
   try{
-    transformStamped = tfBuffer.lookupTransform("FP_ENU", "ECEF", ros::Time(0),ros::Duration(1));
-    geometry_msgs::QuaternionStamped ecefOrientation;
-    ecefOrientation.quaternion.w = currentWaypoint.pose.pose.orientation.w;
-    ecefOrientation.quaternion.x = currentWaypoint.pose.pose.orientation.x;
-    ecefOrientation.quaternion.y = currentWaypoint.pose.pose.orientation.y;
-    ecefOrientation.quaternion.z = currentWaypoint.pose.pose.orientation.z;
+    // transformStamped = tfBuffer.lookupTransform("FP_ENU", "ECEF", ros::Time(0),ros::Duration(1));
+    // geometry_msgs::QuaternionStamped ecefOrientation;
+    // ecefOrientation.quaternion.w = currentWaypoint.pose.pose.orientation.w;
+    // ecefOrientation.quaternion.x = currentWaypoint.pose.pose.orientation.x;
+    // ecefOrientation.quaternion.y = currentWaypoint.pose.pose.orientation.y;
+    // ecefOrientation.quaternion.z = currentWaypoint.pose.pose.orientation.z;
     geometry_msgs::QuaternionStamped enuOrientation; 
-    tf2::doTransform(ecefOrientation, enuOrientation, transformStamped);
+    // tf2::doTransform(ecefOrientation, enuOrientation, transformStamped);
 
-    auto currentPositionX = x;
-    auto currentPositionY = y;
-    auto currentPositionZ = z;
-    auto currentQuaternionX = enuOrientation.quaternion.x;
-    auto currentQuaternionY = enuOrientation.quaternion.y;
-    auto currentQuaternionZ = enuOrientation.quaternion.z;
-    auto currentQuaternionW = enuOrientation.quaternion.w;
-    auto currentPositionYaw = tf::getYaw(enuOrientation.quaternion) ;
+    auto currentPositionX = currentWaypoint.pose.pose.position.x;
+    auto currentPositionY = currentWaypoint.pose.pose.position.y;
+    auto currentPositionZ = currentWaypoint.pose.pose.position.z;
+    auto currentQuaternionX = currentWaypoint.pose.pose.orientation.x;
+    auto currentQuaternionY = currentWaypoint.pose.pose.orientation.y;
+    auto currentQuaternionZ = currentWaypoint.pose.pose.orientation.z;
+    auto currentQuaternionW = currentWaypoint.pose.pose.orientation.w;
+    auto currentPositionYaw = tf::getYaw(currentWaypoint.pose.pose.orientation) ;
 
     /***********通过计算当前坐标和目标轨迹距离，找到一个最小距离的索引号***************************************************************************************/
     vector<double> bestPoints_;
@@ -217,8 +217,8 @@ void PurePursuit::poseCallback(const nav_msgs::Odometry &currentWaypoint) {
                 <<" "<< r_x_[index] <<" "<< r_y_[index]<<" " << degree << " "<< dl <<  std::endl;
       }
       geometry_msgs::Twist vel_msg;
-      vel_msg.linear.x = 0.3;
-      vel_msg.angular.z = theta_send;
+      vel_msg.linear.x = 1;
+      vel_msg.angular.z = -theta_send;
       pub_vel_.publish(vel_msg);
       // 发布小车运动轨迹
       geometry_msgs::PoseStamped this_pose_stamped;

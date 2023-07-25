@@ -1,4 +1,22 @@
 <launch>
+
+    <param name="targetDistance" value="150" />
+    <param name="curvaDistance" value="200" />
+    <param name="distanceThreshold" value="50.0" />
+    <param name="angular_z" value="0.18" />
+    <param name="linear_x" value="0.3" />
+    <param name="flag" value="1" />
+    <param name="bufferSize" value="20" />
+    <param name="threshold" value="50000.0" />
+    <param name="log_flag" value="1" />
+    <param name="distanceMax_radar2" value="300" />
+
+    <param name="max_rotational_velocity" value="1" />
+    <param name="position_tolerance" value="1" />
+    <param name="steering_angle_limit" value="1" />
+    <param name="car_vel" value="1" />
+    <param name="lookahead_distance" value="1" />
+    <param name="pure_pursuit_log_path" value="1" />
     <node pkg="turn_on_wheeltec_robot" type="purepursuit" name="purepursuit" output="screen"/>
     <!-- <param name="gps_points" value="$(find gps_record)/output/gps_points.txt" /> -->
     <param name="log_flag" value = "1" />
