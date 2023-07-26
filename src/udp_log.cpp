@@ -159,7 +159,7 @@ int main(int argc, char** argv) {
     }
 
     std::cout << "UDP server is listening on " << SERVER_IP << ":" << SERVER_PORT << std::endl;
-	ros::Rate loop_rate(10); 
+	ros::Rate loop_rate(20);
     signal(SIGINT, signalHandler);
 
     // 接收数据
