@@ -126,6 +126,7 @@ void PurePursuit::pointCallback(const nav_msgs::Path &msg) {
 }
 double PurePursuit::getDegree(){return degree;}
 double PurePursuit::getVel(){return car_vel;}
+double PurePursuit::get_path_dis(){return path_dis;}
 
 //计算发送给模型车的转角
 void PurePursuit::poseCallback(const nav_msgs::Odometry &currentWaypoint) {
@@ -171,6 +172,7 @@ void PurePursuit::poseCallback(const nav_msgs::Odometry &currentWaypoint) {
     auto smallest = min_element(bestPoints_.begin(), bestPoints_.end());
     // 找到最小横向距离的索引位置
     index = distance(bestPoints_.begin(), smallest);
+    path_dis = sqrt(pow(r_y_[index] - currentPositionY, 2) + pow(r_x_[index] - currentPositionX, 2));
     int temp_index;
     for (int i = index; i < pointNum; i++) {
       //遍历路径点和预瞄点的距离，从最小横向位置的索引开始

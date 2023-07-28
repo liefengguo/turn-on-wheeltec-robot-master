@@ -29,6 +29,7 @@ public:
     void run();
     double getDegree();
     double getVel();
+    double get_path_dis();
 
 private:
     void poseCallback(const nav_msgs::Odometry &currentWaypoint);
@@ -65,6 +66,7 @@ private:
     double k ;
     double degree;
     bool goal_reached_, path_loaded_;
+    double path_dis;
 
     // Other class members and functions as before
     // ...

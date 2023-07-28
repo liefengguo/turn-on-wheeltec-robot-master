@@ -21,6 +21,7 @@ int main(int argc, char**argv){
             radar_controller.setGNSSStatus(vrtkReader.getGNSSStatus());
             radar_controller.setPath_degree(controller_path.getDegree());
             radar_controller.setPath_vel(controller_path.getVel());
+            radar_controller.setPath_dis(controller_path.get_path_dis());
             radar_controller.controlByRadar();
         }
 

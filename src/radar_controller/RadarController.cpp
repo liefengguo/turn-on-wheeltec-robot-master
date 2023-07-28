@@ -4,6 +4,7 @@ RadarController::RadarController() {
     radar_cmd_vel = nh.advertise<geometry_msgs::Twist>("/cmd_vel", 20);
     nh.param<int>("targetDistance", targetDistance, 230);
     nh.param<int>("distanceThreshold", distanceThreshold, 80);
+    nh.param<double>("path_dis_threshold", path_dis_threshold,0.5);
     nh.param<int>("curvaDistance", curvaDistance, 200);
     nh.param<double>("angular_z", angular_z, 0.08);
     nh.param<double>("linear_x", linear_x, 0.3);
@@ -181,19 +182,25 @@ void RadarController::curvature_controlByRadar(){
 void RadarController::controlByRadar() {
     radar2_3_dif = radar2 - radar3;
     if (gnss_status < 7 || flag) {
-        if (radar1 <  distanceMax_radar1 || radar2_3_dif < -distanceThreshold_radar2_3){
+        if (radar1 <  distanceMax_radar1){
             turnLeft_huge();
         }else {
-            if(abs(path_degree) < 12 || path_degree == 0){
-                if (radar2 < distanceMax_radar2){
-                    line_controlByRadar();
-                } else {
-                    if(log_flag){
-                        logfile << -1 << std::endl;
+            if (path_dis_ < path_dis_threshold){
+                if(abs(path_degree) < 12 || path_degree == 0){
+                    if (radar2 < distanceMax_radar2){
+                        line_controlByRadar();
+                    } else {
+                        if(log_flag){
+                            logfile << -1 << std::endl;
+                        }
                     }
+                }else if(abs(path_degree) >= 12){
+                    curvature_controlByRadar();
                 }
-            }else if(abs(path_degree) >= 12){
-                curvature_controlByRadar();
+            }else{
+                if(log_flag){
+                    logfile << -2 << std::endl;
+                }
             }
         }
         
@@ -212,4 +219,7 @@ void RadarController::setPath_degree(double degree_){
 }
 void RadarController::setPath_vel(double vel_){
     path_vel = vel_;
+}
+void RadarController::setPath_dis(double dis_){
+    path_dis_ = dis_;
 }
