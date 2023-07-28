@@ -6,10 +6,14 @@ AdaptiveFilter::AdaptiveFilter(int bufferSize, int threshold)
 
 int AdaptiveFilter::filter(int value) {
     if (isOutlier(value)) {
-        average = calculateAverage();
-        std::cout<<" ave:"<<average<<" outlier"<<std::endl;
-        std::cout<<"value:"<<value<<std::endl;
-        return average;
+        if(value > 1000){
+            return value;
+        }else{
+            average = calculateAverage();
+            std::cout<<" ave:"<<average<<" outlier"<<std::endl;
+            std::cout<<"value:"<<value<<std::endl;
+            return average;
+        }
     }
     // if(abs(value - average) > threshold * standardDeviation)
     buffer.push_back(value);

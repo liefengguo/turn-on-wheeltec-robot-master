@@ -18,7 +18,11 @@ private:
     double linear_x;
     geometry_msgs::Twist vel_msg;
     int distanceThreshold;
+    int distanceMax_radar3;
     int distanceMax_radar2;
+    int distanceMax_radar1;
+    int distanceThreshold_radar2_3;
+    int radar2_3_dif;
     int targetDistance;
     int curvaDistance;
     double path_degree;
@@ -26,6 +30,9 @@ private:
     
     void turnLeft();
     void turnRight();
+        
+    void turnLeft_huge();
+    void turnRight_huge();
     void turnLeft_curva();
     void turnRight_curva();
     int flag;
