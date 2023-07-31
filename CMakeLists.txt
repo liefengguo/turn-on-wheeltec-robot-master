@@ -74,6 +74,12 @@ target_link_libraries(six_a22
 )
 add_dependencies(six_a22 ${PROJECT_NAME}_generate_messages_cpp)
 
+add_executable(serial_write src/serial_connect/serial_write.cpp src/serial_connect/add_CRC.cpp)
+target_link_libraries(serial_write
+  ${catkin_LIBRARIES}
+)
+add_dependencies(serial_write ${PROJECT_NAME}_generate_messages_cpp)
+
 
 add_executable(six_decition_radar_node src/serial_connect/six_decition_radar_node 
       src/serial_connect/six_decition_radar.cpp src/serial_connect/adaptive_filter.cpp)
