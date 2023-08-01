@@ -2,11 +2,23 @@
   <!-- <arg name="file_path" default="$(find position_saver_node)/output/position.txt" /> -->
   <!-- <arg name="topic_name" default="/djiros/rtk_position" /> -->
   <!-- <arg name="topic_name" default="/fixposition/navsatfix" /> -->
-    <param name="targetDistance" value="230" /> 
+    <!-- <param name="targetDistance" value="230" /> 
   <param name="distanceThreshold" value="80.0" />
   <param name="bufferSize" value="20" />
   <param name="threshold" value="50000.0" />
-  <param name="log_flag" value="1" />
+  <param name="log_flag" value="1" /> -->
+
+      <param name="targetDistance" value="150" />
+    <param name="curvaDistance" value="200" />
+    <param name="distanceThreshold" value="50.0" />
+    <param name="angular_z" value="0.18" />
+    <param name="linear_x" value="0.3" />
+    <param name="flag" value="1" />
+    <param name="bufferSize" value="20" />
+    <param name="threshold" value="50000.0" />
+    <param name="log_flag" value="1" />
+    <param name="distanceMax_radar2" value="300" />
+
   <node pkg="turn_on_wheeltec_robot" type="six_decition_radar_node" name="six_decition_radar_node" output="screen">
     <!-- <param name="file_path" value="$(find xunji)/output/position.txt" /> -->
     <!-- <param name="topic_name" value="/fixposition/navsatfix" /> -->

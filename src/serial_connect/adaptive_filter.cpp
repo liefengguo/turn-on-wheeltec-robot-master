@@ -6,7 +6,7 @@ AdaptiveFilter::AdaptiveFilter(int bufferSize, int threshold)
 
 int AdaptiveFilter::filter(int value) {
     if (isOutlier(value)) {
-        if(value > 1000){
+        if(value > 300){
             return value;
         }else{
             average = calculateAverage();

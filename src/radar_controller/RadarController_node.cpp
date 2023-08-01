@@ -18,6 +18,7 @@ int main(int argc, char** argv) {
             radar_controller.setGNSSStatus(vrtkReader->getGNSSStatus());
             radar_controller.setPath_degree(0);
             radar_controller.setPath_vel(0.3);
+            radar_controller.setPath_dis(0);
             radar_controller.controlByRadar();
         }
         ros::spinOnce();

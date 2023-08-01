@@ -10,8 +10,8 @@ RadarController::RadarController() {
     nh.param<double>("linear_x", linear_x, 0.3);
     nh.param<int>("flag", flag, 1);
     nh.param<bool>("log_flag", log_flag, 1);
-    nh.param<int>("distanceMax_radar2", distanceMax_radar2, 218);
-    nh.param<int>("distanceMax_radar1", distanceMax_radar1, 399);
+    nh.param<int>("distanceMax_radar2", distanceMax_radar2, 399);
+    nh.param<int>("distanceMax_radar1", distanceMax_radar1, 300);
     nh.param<int>("distanceMax_radar3", distanceMax_radar3, 399);
     nh.param<int>("distanceThreshold_radar2_3", distanceThreshold_radar2_3, 399);
 
@@ -101,7 +101,7 @@ void RadarController::turnLeft() {
     vel_msg.linear.x = path_vel;
     radar_cmd_vel.publish(vel_msg);
     if(log_flag){
-        logfile << -vel_msg.angular.z << std::endl;
+        logfile << -abs(vel_msg.angular.z) << std::endl;
     }
 }
 void RadarController::turnRight() {
@@ -117,7 +117,7 @@ void RadarController::turnLeft_huge() {
     vel_msg.linear.x = path_vel;
     radar_cmd_vel.publish(vel_msg);
     if(log_flag){
-        logfile << -vel_msg.angular.z << std::endl;
+        logfile << -abs(vel_msg.angular.z) << std::endl;
     }
 }
 void RadarController::turnRight_huge() {
