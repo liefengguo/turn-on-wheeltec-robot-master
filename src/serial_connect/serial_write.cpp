@@ -19,7 +19,9 @@ uint8_t CMD_03[CMD_LENGTH] = {0x03, 0x03, 0x01, 0x01, 0x00, 0x01, 0x85,0xF6};
 uint8_t CMD_04[CMD_LENGTH] = {0x04, 0x03, 0x01, 0x01, 0x00, 0x01, 0x85,0xF6};
 uint8_t CMD_05[CMD_LENGTH] = {0x05, 0x03, 0x01, 0x01, 0x00, 0x01, 0x85,0xF6};
 uint8_t CMD_06[CMD_LENGTH] = {0x06, 0x03, 0x01, 0x01, 0x00, 0x01, 0x85,0xF6};
-uint8_t JIAODU[CMD_LENGTH] = {0x06, 0x06, 0x02, 0x08, 0x00, 0x01, 0x85,0xF6};
+uint8_t JIAODU[CMD_LENGTH] = {0x03, 0x06, 0x02, 0x08, 0x00, 0x02, 0x85,0xF6};
+// uint8_t JIAODU[CMD_LENGTH] = {0x02, 0x06, 0x02, 0x1f, 0x00, 0x01, 0x85,0xF6};
+
 uint16_t data1 ,data2,data3,data4,data5,data6;
 uint16_t last_data1 ,last_data2,last_data3,last_data4,last_data5,last_data6 = 0;
 static int index_i;
@@ -241,7 +243,7 @@ int main(int argc, char **argv) {
     std::condition_variable cv;
     bool isRunning = true;
     // std::thread sendThread(sendThreadFunc, std::ref(ser), std::ref(mutex), std::ref(cv), std::ref(isRunning));
-    // std::thread receiveThread(receiveThreadFunc, std::ref(ser), std::ref(mutex), std::ref(cv), std::ref(isRunning), std::ref(pub));
+    std::thread receiveThread(receiveThreadFunc, std::ref(ser), std::ref(mutex), std::ref(cv), std::ref(isRunning), std::ref(pub));
 
     // 等待程序结束
     ros::spin();
@@ -250,7 +252,7 @@ int main(int argc, char **argv) {
     isRunning = false;
     cv.notify_all();
     // sendThread.join();
-    // receiveThread.join();
+    receiveThread.join();
 
     return 0;
 }
