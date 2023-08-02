@@ -14,7 +14,7 @@
     <param name="distanceMax_radar0" value="300" />
     <param name="distanceMax_radar1" value="300" />
     <param name="distanceMax_radar2" value="300" />
-    <param name="distanceThreshold_radar2_3" value="68" />
+    <param name="distanceThreshold_radar2_3" value="300" />
 
     <param name="max_rotational_velocity" value="1" />
     <param name="position_tolerance" value="1" />

@@ -13,8 +13,8 @@
 #include "../../include/tools/gnss_coordinate_convert.h"
 using namespace std;
 FILE *fp;
-string file_path_ = "/home/chen/ros_work/lidar/src/control_publisher/";
-string file_name_ = "GPS_ENU.txt";
+string file_path_ ;
+string file_name_;
 
 void callbackPosition(const nav_msgs::Odometry& msgs)
 {
