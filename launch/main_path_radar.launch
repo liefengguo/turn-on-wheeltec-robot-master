@@ -2,8 +2,8 @@
   <!-- <arg name="file_path" default="$(find position_saver_node)/output/position.txt" /> -->
   <!-- <arg name="topic_name" default="/djiros/rtk_position" /> -->
   <!-- <arg name="topic_name" default="/fixposition/navsatfix" /> -->
-    <param name="targetDistance" value="150" />
-    <param name="curvaDistance" value="200" />
+    <param name="targetDistance" value="200" />
+    <param name="curvaDistance" value="218" />
     <param name="distanceThreshold" value="50.0" />     
     <param name="angular_z" value="0.18" />
     <param name="linear_x" value="0.3" />

@@ -9,6 +9,12 @@
     ],
     "files.associations": {
         "*.tcc": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "vector": "cpp",
+        "iostream": "cpp",
+        "fstream": "cpp",
+        "cmath": "cpp",
+        "cassert": "cpp",
+        "algorithm": "cpp"
     }
 }
