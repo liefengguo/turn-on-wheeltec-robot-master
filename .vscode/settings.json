@@ -15,6 +15,9 @@
         "fstream": "cpp",
         "cmath": "cpp",
         "cassert": "cpp",
-        "algorithm": "cpp"
+        "algorithm": "cpp",
+        "__split_buffer": "cpp",
+        "deque": "cpp",
+        "string": "cpp"
     }
 }
