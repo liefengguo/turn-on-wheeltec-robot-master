@@ -129,7 +129,6 @@ void signalHandler(int signal) {
 }
 ros::Publisher pub_carSpeed;
 turn_on_wheeltec_robot::Speed speed;
-ros::NodeHandle n;
 std::vector<int32_t> receivedSpeedData;  // Store received speed data here
 int32_t interpolateSpeed(const std::vector<int32_t> &speedData) {
     int32_t x1 = speedData[speedData.size() - 2];
@@ -160,6 +159,8 @@ void timerCallback(const ros::TimerEvent &event) {
 int main(int argc, char** argv) {
     ros::init(argc, argv, "car_info");
     int sockfd;
+    ros::NodeHandle n;
+
     struct sockaddr_in serverAddr, clientAddr;
     memset(&serverAddr, 0, sizeof(serverAddr));
     socklen_t clientAddrLen = sizeof(clientAddr);
