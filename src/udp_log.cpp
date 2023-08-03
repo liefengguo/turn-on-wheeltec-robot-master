@@ -179,6 +179,10 @@ int main(int argc, char** argv) {
             }
         }
     }
+
+    // Create a timer with the desired frequency
+    ros::Timer timer = nh.createTimer(ros::Duration(0.05), timerCallback);  // 20Hz timer
+
     // 接收数据
     ssize_t numBytesReceived;
     while (ros::ok()) {
