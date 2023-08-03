@@ -127,16 +127,45 @@ void signalHandler(int signal) {
     ros::shutdown();
     exit(0); // 正常退出程序
 }
+ros::Publisher pub_carSpeed;
+turn_on_wheeltec_robot::Speed speed;
+ros::NodeHandle n;
+std::vector<int32_t> receivedSpeedData;  // Store received speed data here
+
+void timerCallback(const ros::TimerEvent &event) {
+    if (!receivedSpeedData.empty()) {
+        // Perform interpolation to get 20Hz data
+        int32_t interpolatedSpeed = interpolateSpeed(receivedSpeedData);
+
+        // Create message and publish interpolated speed
+        speed.speeds.push_back(interpolatedSpeed);
+        pub_carSpeed.publish(speed);
+
+        // Clear old data from receivedSpeedData if necessary
+        // Keep only the latest two data points for interpolation
+        if (receivedSpeedData.size() > 2) {
+            receivedSpeedData.erase(receivedSpeedData.begin());
+        }
+    }
+}
+int32_t interpolateSpeed(const std::vector<int32_t> &speedData) {
+    int32_t x1 = speedData[speedData.size() - 2];
+    int32_t x2 = speedData[speedData.size() - 1];
+
+    // Assuming you want to interpolate at the middle time point
+    int32_t interpolatedSpeed = (x1 + x2) / 2;
+
+    return interpolatedSpeed;
+}
 int main(int argc, char** argv) {
     ros::init(argc, argv, "car_info");
-    ros::NodeHandle n;
     int sockfd;
     struct sockaddr_in serverAddr, clientAddr;
     memset(&serverAddr, 0, sizeof(serverAddr));
     socklen_t clientAddrLen = sizeof(clientAddr);
     ChassisParser chassisParser;
-    turn_on_wheeltec_robot::Speed speed;
-    ros::Publisher pub_carSpeed = n.advertise<turn_on_wheeltec_robot::Speed>("/fixposition/speed",10);
+    
+    pub_carSpeed = n.advertise<turn_on_wheeltec_robot::Speed>("/fixposition/speed",10);
 
     // 创建UDP套接字
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
@@ -161,24 +190,8 @@ int main(int argc, char** argv) {
     std::cout << "UDP server is listening on " << SERVER_IP << ":" << SERVER_PORT << std::endl;
 	ros::Rate loop_rate(20);
     signal(SIGINT, signalHandler);
-    std::vector<int32_t> receivedSpeedData;  // Store received speed data here
 
-    void timerCallback(const ros::TimerEvent &event) {
-        if (!receivedSpeedData.empty()) {
-            // Perform interpolation to get 20Hz data
-            int32_t interpolatedSpeed = interpolateSpeed(receivedSpeedData);
-
-            // Create message and publish interpolated speed
-            speed.speeds.push_back(interpolatedSpeed);
-            pub_carSpeed.publish(speed);
-
-            // Clear old data from receivedSpeedData if necessary
-            // Keep only the latest two data points for interpolation
-            if (receivedSpeedData.size() > 2) {
-                receivedSpeedData.erase(receivedSpeedData.begin());
-            }
-        }
-    }
+    
 
     // Create a timer with the desired frequency
     ros::Timer timer = nh.createTimer(ros::Duration(0.05), timerCallback);  // 20Hz timer
@@ -227,12 +240,3 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-int32_t interpolateSpeed(const std::vector<int32_t> &speedData) {
-    int32_t x1 = speedData[speedData.size() - 2];
-    int32_t x2 = speedData[speedData.size() - 1];
-
-    // Assuming you want to interpolate at the middle time point
-    int32_t interpolatedSpeed = (x1 + x2) / 2;
-
-    return interpolatedSpeed;
-}
