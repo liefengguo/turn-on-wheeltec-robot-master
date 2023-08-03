@@ -131,7 +131,15 @@ ros::Publisher pub_carSpeed;
 turn_on_wheeltec_robot::Speed speed;
 ros::NodeHandle n;
 std::vector<int32_t> receivedSpeedData;  // Store received speed data here
+int32_t interpolateSpeed(const std::vector<int32_t> &speedData) {
+    int32_t x1 = speedData[speedData.size() - 2];
+    int32_t x2 = speedData[speedData.size() - 1];
 
+    // Assuming you want to interpolate at the middle time point
+    int32_t interpolatedSpeed = (x1 + x2) / 2;
+
+    return interpolatedSpeed;
+}
 void timerCallback(const ros::TimerEvent &event) {
     if (!receivedSpeedData.empty()) {
         // Perform interpolation to get 20Hz data
@@ -148,15 +156,7 @@ void timerCallback(const ros::TimerEvent &event) {
         }
     }
 }
-int32_t interpolateSpeed(const std::vector<int32_t> &speedData) {
-    int32_t x1 = speedData[speedData.size() - 2];
-    int32_t x2 = speedData[speedData.size() - 1];
 
-    // Assuming you want to interpolate at the middle time point
-    int32_t interpolatedSpeed = (x1 + x2) / 2;
-
-    return interpolatedSpeed;
-}
 int main(int argc, char** argv) {
     ros::init(argc, argv, "car_info");
     int sockfd;
@@ -194,7 +194,7 @@ int main(int argc, char** argv) {
     
 
     // Create a timer with the desired frequency
-    ros::Timer timer = nh.createTimer(ros::Duration(0.05), timerCallback);  // 20Hz timer
+    ros::Timer timer = n.createTimer(ros::Duration(0.05), timerCallback);  // 20Hz timer
 
     // 接收数据
     ssize_t numBytesReceived;
