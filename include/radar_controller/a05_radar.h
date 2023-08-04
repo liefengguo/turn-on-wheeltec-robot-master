@@ -1,6 +1,8 @@
 #ifndef RADARCONTROLLERA05_H
 #define RADARCONTROLLERA05_H
 #include <geometry_msgs/Twist.h>
+#include <turn_on_wheeltec_robot/a22_data.h>
+
 class RadarController_a05 {
 private:
     ros::Publisher radar_cmd_vel;
@@ -28,30 +30,23 @@ private:
     int distanceMax_radar7;
     int distanceMax_radar8;
     int targetDistance;
-    
+    void setLog_cur_time();
     void stop_cmd();
-    int flag;
+    int a05_flag;
     bool log_flag;
     bool stop_flag;
     std::ofstream logfile;
 public:
     RadarController();
     ~RadarController();
+    void distanceCallback(const a22_data::ConstPtr& msg);
     // RadarController(const DistanceSensor& distanceSensor, const VRFKReader& VRFK_Reader);
     void controlByRadar();
     void setGNSSStatus(int status);
-    void setRadar1(int value);
-    void setRadar2(int value);
-    void setRadar3(int value);
-    void setRadar4(int value);
-    void setRadar5(int value);
-    void setRadar6(int value);
-    void setRadar7(int value);
-    void setRadar8(int value);
     void setPath_degree(double degree_);
     void setPath_vel(double vel_);
+    void setA05_flag(bool flag_);
     void setPath_dis(double dis_);
-    void setLog_cur_time();
     bool getStop_flag();
 };
 
