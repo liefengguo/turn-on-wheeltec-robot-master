@@ -4,6 +4,8 @@
 #include <mutex>
 #include <condition_variable>
 #include <std_msgs/Int32.h>
+#include <turn_on_wheeltec_robot/a22_data.h>
+using namespace turn_on_wheeltec_robot;
 
 // 串口参数
 #define SERIAL_PORT "/dev/ttyUSB0"
@@ -77,18 +79,23 @@ void receiveThreadFunc(serial::Serial &ser, std::mutex &mutex, std::condition_va
         // }
 
         // 发布ROS话题
-        std_msgs::Int32 msg;
+        a22_data a22_data;
         uint16_t data1 = (frame->data[0] << 8) | frame->data[1];
         uint16_t data2 = (frame->data[2] << 8) | frame->data[3];
         uint16_t data3 = (frame->data[4] << 8) | frame->data[5];
         uint16_t data4 = (frame->data[6] << 8) | frame->data[7];
+        std::vector<int32_t> datas;
+        datas.push_back(data1);
+        datas.push_back(data2);
+        datas.push_back(data3);
+        datas.push_back(data4);
         int value1 = (int)data1;
         int value2 = (int)data2;
         int value3 = (int)data3;
         int value4 = (int)data4;
-        std::cout<<"1号："<<value1<<"2:"<<value2<<"3:"<<value3<<"4:"<<value4<<std::endl;
-        msg.data = value1;
-        pub.publish(msg);
+        std::cout<<"1号："<<data1<<"2:"<<data2<<"3:"<<data3<<"4:"<<data4<<std::endl;
+        a22_data.a22_datas = datas;
+        pub.publish(a22_data);
     }
 }
 
@@ -97,7 +104,7 @@ int main(int argc, char **argv) {
     ros::NodeHandle nh;
 
     // 创建ROS话题
-    ros::Publisher pub = nh.advertise<std_msgs::Int32>("temperature", 1000);
+    ros::Publisher pub = nh.advertise<a22_data>("a05_radar", 1000); //因为a22_data 的格式符合a05需求 所以用了这个类型
 
     // 初始化串口
     serial::Serial ser(SERIAL_PORT, BAUDRATE, serial::Timeout::simpleTimeout(1000));
