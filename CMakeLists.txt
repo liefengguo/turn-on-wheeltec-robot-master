@@ -28,19 +28,21 @@ generate_messages(
    nav_msgs
    geometry_msgs
 )
+find_package(Eigen3 REQUIRED)
 
 # ulimit -c unlimited
 # ssh firefly@192.168.1.76
 add_compile_options(-g -std=c++11)    #-g -> core dumped
 
 catkin_package(
-  CATKIN_DEPENDS roscpp geometry_msgs message_runtime
+  CATKIN_DEPENDS roscpp geometry_msgs message_runtime EIGEN3
 )
 
 # defind robot status massage
 # command atkin_make -DCATKIN_WHITELIST_PACKAGES="new_msg"
-include_directories(include ${catkin_INCLUDE_DIRS})
-# include_directories(include/${PROJECT_NAME})
+
+include_directories(${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR}
+        ${Boost_INCLUDE_DIRS})# include_directories(include/${PROJECT_NAME})
 
 # add_executable(wheeltec_robot_node src/wheeltec_robot.cpp src/Quaternion_Solution.cpp)
 # target_link_libraries(wheeltec_robot_node ${catkin_LIBRARIES})
