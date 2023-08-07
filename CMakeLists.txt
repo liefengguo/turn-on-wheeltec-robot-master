@@ -43,7 +43,7 @@ catkin_package(
 # defind robot status massage
 # command atkin_make -DCATKIN_WHITELIST_PACKAGES="new_msg"
 
-include_directories(${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR}
+include_directories(include ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIR}
         ${Boost_INCLUDE_DIRS})# include_directories(include/${PROJECT_NAME})
 
 # add_executable(wheeltec_robot_node src/wheeltec_robot.cpp src/Quaternion_Solution.cpp)
