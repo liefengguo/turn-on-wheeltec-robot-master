@@ -26,7 +26,7 @@ struct point{
 
 bool loadPath(string filename , vector<point> &waypoint) {
 
-    ifstream infile(filename);
+    ifstream infile("/root/catkin_ws/pursite/new_save_path.txt");
     cout<<"infile"<<endl;
     string line;
     //string temp;

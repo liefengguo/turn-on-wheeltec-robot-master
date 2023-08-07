@@ -1,21 +1,29 @@
 #include "../../include/radar_controller/RadarController.h"
+#include <algorithm>
+#include <chrono>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+using namespace std;
 
 RadarController::RadarController() {
     radar_cmd_vel = nh.advertise<geometry_msgs::Twist>("/cmd_vel", 20);
     nh.param<int>("targetDistance", targetDistance, 230);
+    nh.param<int>("curvaDistance", curvaDistance, 200);
     nh.param<int>("distanceThreshold", distanceThreshold, 80);
     nh.param<double>("path_dis_threshold", path_dis_threshold,0.5);
-    nh.param<int>("curvaDistance", curvaDistance, 200);
     nh.param<double>("angular_z", angular_z, 0.08);
     nh.param<double>("linear_x", linear_x, 0.3);
     nh.param<int>("flag", flag, 1);
     nh.param<bool>("log_flag", log_flag, 1);
-    nh.param<int>("distanceMax_radar2", distanceMax_radar2, 399);
+    // nh.param<int>("distanceMax_radar2", distanceMax_radar2, 399);
+    
+        nh.param<int>("distanceMax_radar2", distanceMax_radar2, 399);
     nh.param<int>("distanceMax_radar1", distanceMax_radar1, 300);
     nh.param<int>("distanceMax_radar3", distanceMax_radar3, 399);
     nh.param<int>("distanceThreshold_radar2_3", distanceThreshold_radar2_3, 399);
-
-    if(log_flag){
+if(log_flag){
         std::string path = "/home/glf/log/";
         std::stringstream  filename;
         auto now = std::chrono::system_clock::now();
@@ -101,7 +109,7 @@ void RadarController::turnLeft() {
     vel_msg.linear.x = path_vel;
     radar_cmd_vel.publish(vel_msg);
     if(log_flag){
-        logfile << -abs(vel_msg.angular.z) << std::endl;
+        logfile << vel_msg.angular.z << std::endl;
     }
 }
 void RadarController::turnRight() {
@@ -117,7 +125,7 @@ void RadarController::turnLeft_huge() {
     vel_msg.linear.x = path_vel;
     radar_cmd_vel.publish(vel_msg);
     if(log_flag){
-        logfile << -abs(vel_msg.angular.z) << std::endl;
+        logfile << -vel_msg.angular.z << std::endl;
     }
 }
 void RadarController::turnRight_huge() {
@@ -137,7 +145,7 @@ void RadarController::turnLeft_curva() {
     vel_msg.linear.x = path_vel;
     radar_cmd_vel.publish(vel_msg);
     if(log_flag){
-        logfile << -abs(vel_msg.angular.z) << std::endl;
+        logfile << vel_msg.angular.z << std::endl;
     }
 }
 void RadarController::turnRight_curva() {
@@ -158,10 +166,13 @@ void RadarController::line_controlByRadar(){
         std::cout<< "distance too far， right please!!"<<std::endl;
         // std::cout<<"radar2: "<<radar2<<" targetDistance + distanceThreshold: "<<targetDistance + distanceThreshold<<std::endl;
     } else {
+        vel_msg.angular.z = 0;
+        vel_msg.linear.x = path_vel;
+        radar_cmd_vel.publish(vel_msg);
         std::cout<< "OK! go "<<std::endl;
         // std::cout<<"radar2: "<<radar2<<" targetDistance - distanceThreshold: "<<targetDistance - distanceThreshold<<std::endl;
         if(log_flag){
-            logfile << 0 << std::endl;
+            logfile << vel_msg.angular.z << std::endl;
         }
     }
 }
@@ -169,18 +180,24 @@ void RadarController::curvature_controlByRadar(){
     if (radar2 < curvaDistance - distanceThreshold ) {
         std::cout<< "距离过近，left:"<<std::endl;
         turnLeft_curva();
+        // std::cout<<"radar2: "<<radar2<<" targetDistance - distanceThreshold: "<<targetDistance - distanceThreshold<<std::endl;
     } else if (radar2 > curvaDistance + distanceThreshold) {
         turnRight_curva();
         std::cout<< "distance too far， right please!!"<<std::endl;
+        // std::cout<<"radar2: "<<radar2<<" targetDistance + distanceThreshold: "<<targetDistance + distanceThreshold<<std::endl;
     } else {
+        vel_msg.angular.z = path_degree* 0.5 / 38.6;
+        vel_msg.linear.x = linear_x;
+        radar_cmd_vel.publish(vel_msg);
         std::cout<< "OK! go "<<std::endl;
+        // std::cout<<"radar2: "<<radar2<<" targetDistance - distanceThreshold: "<<targetDistance - distanceThreshold<<std::endl;
         if(log_flag){
-            logfile << -0.8 << std::endl;
+            logfile << vel_msg.angular.z << std::endl;
         }
     }
 }
 void RadarController::controlByRadar() {
-    radar2_3_dif = radar2 - radar3;
+    cout << "lidar control" << endl;
     if (gnss_status < 7 || flag) {
         if (radar1 <  distanceMax_radar1){
             turnLeft_huge();
@@ -203,7 +220,6 @@ void RadarController::controlByRadar() {
                 }
             }
         }
-        
     } else {
         // RTK is not good, use alternative control method
         // Add your code here for alternative control method
@@ -218,7 +234,8 @@ void RadarController::setPath_degree(double degree_){
     path_degree = degree_;
 }
 void RadarController::setPath_vel(double vel_){
-    path_vel = vel_;
+    path_vel = vel_ * 0.05;
+    cout << path_vel << endl;
 }
 void RadarController::setPath_dis(double dis_){
     path_dis_ = dis_;

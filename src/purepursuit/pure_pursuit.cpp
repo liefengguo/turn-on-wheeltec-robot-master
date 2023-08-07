@@ -4,6 +4,43 @@
    Sorniotti et al. Path tracking for Automated Driving, 2017.
 */
 #include "../../include/common/purepursuit.hpp"
+#include <algorithm>
+#include <chrono>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include "../../include/BezierCurve.h"
+#include "../../include/DWA.h"
+
+string line;
+int tmp = 0, i, gap = 0, tmp_increasement = 0;
+double x;
+using namespace std;
+
+
+// 这个函数算得角度用来构造旋转矩阵
+int get_angle(double x, double y) {
+    if (x >= 0 && y >= 0) // 第一象限
+        return 90 - atan2(y, x) * 180 / M_PI;
+    else if (x >= 0 && y < 0)
+        return 0 - atan2(y, x) * 180 / M_PI + 90;
+    else if (x < 0 && y >= 0)
+        return 180 - atan2(y, x) * 180 / M_PI + 270;
+    else
+        return 0 - atan2(y, x) * 180 / M_PI + 90;
+}
+
+// 这个函数算的值赋给给dwa中，来初始化运动
+double get_start_angle(double x, double y) {
+    if (x >= 0 && y >= 0) // 第一象限
+        return atan2(y, x) * 180 / M_PI;
+    else if (x >= 0 && y < 0) // 四
+        return 360 + atan2(y, x) * 180 / M_PI;
+    else if (x < 0 && y >= 0)
+        return atan2(y, x) * 180 / M_PI;
+    else
+        return 360 + atan2(y, x) * 180 / M_PI;
+}
 
 PurePursuit::PurePursuit() : lookahead_distance_(1.0), v_max_(0.3), car_vel(v_max_), w_max_(1.0), index(0),
                              goal_reached_(false), nh_private_("~")
@@ -11,16 +48,14 @@ PurePursuit::PurePursuit() : lookahead_distance_(1.0), v_max_(0.3), car_vel(v_ma
   // Get parameters from the parameter server
   nh_private_.param<bool>("log_flag", log_flag, 1);
   nh_private_.param<double>("max_rotational_velocity", w_max_, 1);
-  nh_private_.param<double>("position_tolerance", position_tolerance_, 0.6);
+  nh_private_.param<double>("position_tolerance", position_tolerance_, 0.1);
   nh_private_.param<double>("steering_angle_limit", delta_max_, 1);
   nh_private_.param<double>("car_vel", car_vel, 0.4);
   nh_private_.param<double>("lookahead_distance", lookahead_distance_, 3);
   nh_private_.param<string>("pure_pursuit_log_path", pure_pursuit_log_path, "/home/glf/log/");
-  pointNum = 0;
-  // targetIndex = pointNum - 1;
-
-  path_loaded_ = false;
-  splinePath_sub = nh_.subscribe("/splinepoints", 1, &PurePursuit::pointCallback, this);
+  pointNum = 0, tmp_count = 0, stop_count = 0,aim_index=9999;
+  in_bizhang = false,has_barrier = false;
+  load_aims();
   carPose_sub = nh_.subscribe("/fixposition/odometry", 1, &PurePursuit::poseCallback, this);
 
   pub_vel_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
@@ -30,104 +65,53 @@ PurePursuit::PurePursuit() : lookahead_distance_(1.0), v_max_(0.3), car_vel(v_ma
   marker_pub_street = nh_.advertise<visualization_msgs::Marker>("turn_angle_marker", 1);
   marker_pub_fuzhu = nh_.advertise<visualization_msgs::Marker>("fuzhu_marker", 1);
   marker_pub_ext_car = nh_.advertise<visualization_msgs::Marker>("ext_car_marker", 1);
-  
-  marker.ns = "coordinates";
-  marker.id = 0;
-  marker.type = visualization_msgs::Marker::SPHERE;
-  marker.action = visualization_msgs::Marker::ADD;
-  marker.pose.position.z = 0.0;
-  marker.pose.orientation.x = 0.0;
-  marker.pose.orientation.y = 0.0;
-  marker.pose.orientation.z = 0.0;
-  marker.pose.orientation.w = 1.0;
-  marker.scale.x = 0.5;
-  marker.scale.y = 0.5;
-  marker.scale.z = 0.5;
-  marker.color.a = 1.0;
-  marker.color.r = 0.4;
-  marker.color.g = 0.7;
-  marker.color.b = 1.0;
 
-  marker_car.header.frame_id = "map";
-  marker_car.ns = "car";
-  marker_car.id = 1;
-  marker_car.action = visualization_msgs::Marker::ADD;
-  marker_car.type = visualization_msgs::Marker::CUBE;
-  marker_car.scale.x = 0.5;  // 车辆模型的缩放因子
-  marker_car.scale.y = 0.2;
-  marker_car.scale.z = 0.1;
-  marker_car.color.a = 1.0;  // 不透明度
-  marker_car.color.r = 1.0;  // 颜色为红色
-  marker_car.color.g = 0.3;
-  marker_car.color.b = 0.2;
-
-  marker_streer.header.frame_id = "map";
-  marker_streer.header.stamp = ros::Time::now();
-  marker_streer.ns = "steering";
-  marker_streer.action = visualization_msgs::Marker::ADD;
-  marker_streer.type = visualization_msgs::Marker::LINE_STRIP;
-  marker_streer.scale.x = 0.1;  // 线的宽度
-  marker_streer.color.a = 1.0;  // 不透明度
-  marker_streer.color.r = 1.0;  // 颜色为紫色
-  marker_streer.color.g = 0.0;
-  marker_streer.color.b = 1.0;
-
-  marker_fuzhu.header.frame_id = "map";
-  marker_fuzhu.header.stamp = ros::Time::now();
-  marker_fuzhu.ns = "fuzhu";
-  marker_fuzhu.action = visualization_msgs::Marker::ADD;
-  marker_fuzhu.type = visualization_msgs::Marker::LINE_STRIP;
-  marker_fuzhu.scale.x = 0.1;  // 线的宽度
-  marker_fuzhu.color.a = 1.0;  // 不透明度
-  marker_fuzhu.color.r = 1.0;  // 颜色为红色
-  marker_fuzhu.color.g = 0.0;
-  marker_fuzhu.color.b = 0.0;
-
-  marker_ext_car.header.frame_id = "map";
-  marker_ext_car.header.stamp = ros::Time::now();
-  marker_ext_car.ns = "ext_car";
-  marker_ext_car.action = visualization_msgs::Marker::ADD;
-  marker_ext_car.type = visualization_msgs::Marker::LINE_STRIP;
-  marker_ext_car.scale.x = 0.1;  // 线的宽度
-  marker_ext_car.color.a = 1.0;  // 不透明度
-  marker_ext_car.color.r = 0.0;  // 颜色为绿色
-  marker_ext_car.color.g = 1.0;
-  marker_ext_car.color.b = 0.0;
-
-  path.header.frame_id = "map";
-  // 设置时间戳
-  path.header.stamp = ros::Time::now();
-  geometry_msgs::PoseStamped pose;
-  pose.header.stamp = ros::Time::now();
-  // 设置参考系
-  pose.header.frame_id = "map";
-
-
-  if (log_flag){
-  auto now = std::chrono::system_clock::now();
-  std::time_t timestamp = std::chrono::system_clock::to_time_t(now);
-  struct tm* timeinfo = std::localtime(&timestamp);
-
-  filename <<pure_pursuit_log_path<< "cmd_z" << (timeinfo->tm_mon + 1) 
-  << "-" << timeinfo->tm_mday<<"-" << timeinfo->tm_hour <<"-" << timeinfo->tm_min
-                << ".txt";
-  std::cout<<"file path :"<<filename.str()<<std::endl;
-  // 打开日志文件
-  logfile.open(filename.str(), std::ios::app);
-  }
+    path.header.frame_id = "map";
+    // 设置时间戳
+    path.header.stamp = ros::Time::now();
+    geometry_msgs::PoseStamped pose;
+    pose.header.stamp = ros::Time::now();
+    // 设置参考系
+    pose.header.frame_id = "map";
+    will_stop = false;
+    x_bei = 0;
+    x_up = true, x_down = false;
+    cout << "执行到了这里，初始化完成: " << pointNum << endl;
 }
-void PurePursuit::pointCallback(const nav_msgs::Path &msg) {
-  pointNum = msg.poses.size();
 
-  for (int i = 0; i < pointNum; i++) {
-    r_x_.push_back(msg.poses[i].pose.position.x);
-    r_y_.push_back(msg.poses[i].pose.position.y);
-  }
+void PurePursuit::load_aims() {
+    cout << "开始加载目标点" << endl;
+    ifstream in(load_aim_path);
+    int index = 0;
+    while (getline(in, line)) {
+        stringstream ss(line);
+        tmp = 0, index++;
+        while (ss >> x) {
+            if (tmp == 0)
+                r_x_.push_back(x);
+            else if (tmp == 1)
+                r_y_.push_back(x);
+            else if (tmp == 2)
+                r_z_.push_back(x);
+            else
+                r_yam_.push_back(x);
+            tmp++;
+        }
+    }
+    pointNum = index;
 }
+
+bool PurePursuit::detect_barrier() {
+    tmp_count++;
+    if (tmp_count == 80)
+    {
+        cout << "检测到了障碍物" << endl;
+        return true;
+    }
+    return false;
+}
+
 double PurePursuit::getDegree(){return degree;}
-double PurePursuit::getVel(){return car_vel;}
-double PurePursuit::get_path_dis(){return path_dis;}
-
 //计算发送给模型车的转角
 void PurePursuit::poseCallback(const nav_msgs::Odometry &currentWaypoint) {
   double x ,y,z;
@@ -172,7 +156,6 @@ void PurePursuit::poseCallback(const nav_msgs::Odometry &currentWaypoint) {
     auto smallest = min_element(bestPoints_.begin(), bestPoints_.end());
     // 找到最小横向距离的索引位置
     index = distance(bestPoints_.begin(), smallest);
-    path_dis = sqrt(pow(r_y_[index] - currentPositionY, 2) + pow(r_x_[index] - currentPositionX, 2));
     int temp_index;
     for (int i = index; i < pointNum; i++) {
       //遍历路径点和预瞄点的距离，从最小横向位置的索引开始
@@ -187,6 +170,8 @@ void PurePursuit::poseCallback(const nav_msgs::Odometry &currentWaypoint) {
       }
     }
     index = temp_index;
+    now_pos_x = currentPositionX,now_pos_y = currentPositionY;
+    cout << "下一个目标点是：" << index << " " << now_pos_x << " " << now_pos_y << endl;
     /**************************************************************************************************/
     float alpha_two_point = atan2(r_y_[index] - currentPositionY, r_x_[index] - currentPositionX); 
     float alpha = alpha_two_point - currentPositionYaw;
@@ -196,122 +181,201 @@ void PurePursuit::poseCallback(const nav_msgs::Odometry &currentWaypoint) {
     float dl = sqrt(pow(r_y_[index] - currentPositionY, 2) +
                     pow(r_x_[index] - currentPositionX, 2));
     // 发布小车运动指令及运动轨迹
-    if (dl > position_tolerance_) {
+    if (dl > 0.3) {
+      car_vel = 0.3;
       float theta = atan(2 * Ld * sin(alpha) / dl);
       degree = theta * 180 / M_PI;
       degree = max(min(38.6, -degree), -38.6);
       double theta_send = degree * 0.5 / 38.6;
+      // car_vel *= std::abs(cos(theta_send));
       double curYaw_deg = currentPositionYaw * 180 / M_PI;
 
-      cout<<"alpha: "<<alpha* 180 /M_PI<<" degree"<<degree<<" dis: "<<dl<<"  index:"<<index<<"x: "<<r_x_[index]<<"y: "<<r_y_[index]<<endl;
-      cout<<"curr_yaw"<< curYaw_deg <<" alpha_two_point:" << alpha_two_point * 180 / M_PI<<endl;
-      if(log_flag){
-        if (!logfile.is_open()) {
-            // 处理无法打开日志文件的情况
-            std::cout<<"no open!!!!"<<std::endl;
-            // return;
-        }
-        auto now = std::chrono::system_clock::now();
-        std::time_t cur_timestamp = std::chrono::system_clock::to_time_t(now);
-        logfile << cur_timestamp << " " << currentPositionX << " " << currentPositionY << " " <<curYaw_deg 
-                <<" "<< r_x_[index] <<" "<< r_y_[index]<<" " << degree << " "<< dl <<  std::endl;
-      }
+      // cout<<"alpha: "<<alpha* 180 /M_PI<<" degree"<<degree<<" dis: "<<dl<<"  index:"<<index<<"x: "<<r_x_[index]<<"y: "<<r_y_[index]<<endl;
+     // cout<<"curr_yaw"<< curYaw_deg <<" alpha_two_point:" << alpha_two_point * 180 / M_PI<<endl;
       geometry_msgs::Twist vel_msg;
-      vel_msg.linear.x = car_vel;
+      vel_msg.linear.x = 0.05 * x_bei;
       vel_msg.angular.z = theta_send;
+      
+      cout << "____________________" << theta_send << " " << degree << endl;
       pub_vel_.publish(vel_msg);
-      // 发布小车运动轨迹
-      geometry_msgs::PoseStamped this_pose_stamped;
-      this_pose_stamped.pose.position.x = currentPositionX;
-      this_pose_stamped.pose.position.y = currentPositionY;
-
-      geometry_msgs::Quaternion goal_quat = tf::createQuaternionMsgFromYaw(theta);
-      this_pose_stamped.pose.orientation.x = currentQuaternionX;
-      this_pose_stamped.pose.orientation.y = currentQuaternionY;
-      this_pose_stamped.pose.orientation.z = currentQuaternionZ;
-      this_pose_stamped.pose.orientation.w = currentQuaternionW;
-
-      this_pose_stamped.header.stamp = ros::Time::now();
-
-      this_pose_stamped.header.frame_id = "map";
-      path.poses.push_back(this_pose_stamped);
-
-      marker.header.frame_id = "map";
-      marker.header.stamp = ros::Time::now();
-
-      marker.pose.position.x = r_x_[index];
-      marker.pose.position.y = r_y_[index];
-      marker_pub.publish(marker);
-
-      marker_car.header.stamp = ros::Time::now();
-      cout<<"车："<<currentPositionX<<"  " << currentPositionY<< endl;
-      marker_car.pose = this_pose_stamped.pose;
-      // marker_car
-      marker_car.pose.orientation = goal_quat;
-      marker_car_pub.publish(marker_car);
-
-      marker_streer.points.clear();
-      marker_streer.header.stamp = ros::Time::now();
-      marker_streer.points.push_back(this_pose_stamped.pose.position);
-      geometry_msgs::Point end_point;
-      end_point.x = currentPositionX + 10 * sin(theta);
-      end_point.y = currentPositionY + 10 * cos(theta);    
-      end_point.z = 0.0;
-      marker_streer.points.push_back(end_point);
-      // 发布Marker消息
-      marker_pub_street.publish(marker_streer);
-
-
-      marker_fuzhu.points.clear();
-      marker_fuzhu.header.stamp = ros::Time::now();
-      marker_fuzhu.points.push_back(this_pose_stamped.pose.position);
-      geometry_msgs::Point end_point_fuzhu;
-      end_point_fuzhu.x = r_x_[index]+ 8;
-      end_point_fuzhu.y = currentPositionY;    
-      end_point_fuzhu.z = 0.0;
-      marker_fuzhu.points.push_back(end_point_fuzhu);
-      marker_pub_fuzhu.publish(marker_fuzhu);
-
-      double currentYaw = (currentPositionYaw > M_PI) ? 
-            (currentPositionYaw - 2 * M_PI) : (currentPositionYaw < -M_PI) ? (currentPositionYaw + 2 * M_PI) : currentPositionYaw;
-      double ext_car_y = abs(tan(curYaw_deg)) * abs(r_x_[index] - currentPositionX) + currentPositionY;
-      marker_ext_car.points.clear();
-      marker_ext_car.header.stamp = ros::Time::now();
-      marker_ext_car.points.push_back(this_pose_stamped.pose.position);
-      geometry_msgs::Point end_point_ext_car;
-      int lenth = 8;
-      end_point_ext_car.x = currentPositionX + lenth* sin(currentPositionYaw );
-      end_point_ext_car.y = currentPositionY + lenth* cos(currentPositionYaw );    
-      end_point_ext_car.z = 0.0;
-      marker_ext_car.points.push_back(end_point_ext_car);
-      marker_pub_ext_car.publish(marker_ext_car);
 
     } else {
-      cout<<"NO: "<<dl<<endl;
-      geometry_msgs::Twist vel_msg;
-      vel_msg.linear.x = 0;
-      vel_msg.angular.z = 0;
-      pub_vel_.publish(vel_msg);
+        cout << "-------------------------------------NO: " << dl << " index=" << index << endl;
+        geometry_msgs::Twist vel_msg;
+        vel_msg.angular.z = 0;
+        if (index > pointNum - 5) // 到这里确实就要停止了
+        {
+            vel_msg.linear.x = 0.05 * x_bei;
+            pub_vel_.publish(vel_msg);
+            x_down = true;
+            will_stop = true;
+            cout << vel_msg.linear.x << endl;
+        } else // 假停止，继续走
+        {
+            vel_msg.linear.x = 0.05 * x_bei;
+            pub_vel_.publish(vel_msg);
+            cout << vel_msg.linear.x << endl;
+        }
     }
-  path_pub_.publish(path);
+      if(in_bizhang== true && index>=aim_index+15)
+      {
+          in_bizhang = false;
+          cout << "*************************开始恢复正常带超声波的贴边" << endl;
+      }
+
+      if (detect_barrier() == true && in_bizhang == false) // 检测到障碍物
+      {
+          cout << "检测到障碍物!!!!!!!!!!" << endl;
+          in_bizhang = true;
+          x_down = true;
+          // 接下来可以考虑第一次进来的时候开一个线程去生成轨迹，轨迹生成完了之后再动起来
+          has_barrier = true;
+      }
   }// try
   catch (tf2::TransformException &ex)
   {
     ROS_WARN_STREAM(ex.what());
   }
 }
+
+/// 生成避障轨迹的代码
+void PurePursuit::dwa_get_trace() {
+    for (i = index; i < pointNum; i++) {
+        float dis = sqrt(pow(now_pos_y - r_y_[i], 2) + pow(now_pos_x - r_x_[i], 2));
+        if (dis > 12.0) {
+            end_x = r_x_[i] - r_x_[index];
+            end_y = r_y_[i] - r_y_[index];
+            aim_index = i;
+            break;
+        }
+    }
+    gap = aim_index - index;
+    cout << "开始生成避障轨迹！ " << index << " " << aim_index << endl;
+    int angle = get_angle(end_x, end_y);
+    Vector2d end;
+    vector <Vector2d> barrier;
+
+    /*躲避人的模型*/
+    barrier.push_back(Vector2d(0, 3.8));
+    barrier.push_back(Vector2d(0, 4.2));
+    barrier.push_back(Vector2d(0, 4.6));
+    barrier.push_back(Vector2d(0, 5));
+    barrier.push_back(Vector2d(0, 5.4));
+    barrier.push_back(Vector2d(0, 5.8));
+    barrier.push_back(Vector2d(0, 6.2));
+    barrier.push_back(Vector2d(0, 6.6));
+    barrier.push_back(Vector2d(0, 7.0));
+    barrier.push_back(Vector2d(-0.4, 3.8));
+    barrier.push_back(Vector2d(-0.8, 3.8));
+    barrier.push_back(Vector2d(-1.2, 3.8));
+    barrier.push_back(Vector2d(-1.6, 3.8));
+    barrier.push_back(Vector2d(-1.6, 4.2));
+    barrier.push_back(Vector2d(-1.6, 4.6));
+    barrier.push_back(Vector2d(-1.6, 5));
+    barrier.push_back(Vector2d(-1.6, 5.4));
+    barrier.push_back(Vector2d(-1.6, 5.8));
+    barrier.push_back(Vector2d(-1.6, 6.2));
+    barrier.push_back(Vector2d(-1.6, 6.6));
+    barrier.push_back(Vector2d(-1.6, 7.0));
+    barrier.push_back(Vector2d(-1.2, 7.0));
+    barrier.push_back(Vector2d(-0.8, 7.0));
+    barrier.push_back(Vector2d(-0.4, 7.0));
+    barrier.push_back(Vector2d(0.4, 3));
+
+    // 求出旋转矩阵
+    MatrixXd to_y(2, 2), y_to(2, 2); // to_y表示映到y轴上  y_to表示映回去
+    to_y(0, 0) = cos(angle * M_PI / 180);
+    to_y(0, 1) = sin(angle * M_PI / 180);
+    to_y(1, 0) = 0 - sin(angle * M_PI / 180);
+    to_y(1, 1) = cos(angle * M_PI / 180);
+    // 初始化两个旋转矩阵
+    y_to(0, 0) = cos(angle * M_PI / 180);
+    y_to(0, 1) = 0 - sin(angle * M_PI / 180);
+    y_to(1, 0) = sin(angle * M_PI / 180);
+    y_to(1, 1) = cos(angle * M_PI / 180);
+
+    // --------------------------接下来是dwa的内容----------------------------
+    VectorXd state(5);
+    // 初始化系统状态
+    state << 0.0, 0.0, 9 *PI/ 17, 0.0, 0.0;//[x(m), y(m), yaw(rad), v(m/s), omega(rad/s)]
+    Vector2d goal(0, 12); //目标点
+    double dt = 2; //采样时间   0.25
+    // double v_min=-0.5,v_max=0.5,w_min=-40*PI/180,w_max=40*PI/180; //线速度角速度边界
+    double v_min = -0.4, v_max = 0.4, w_min = -20 * PI / 180, w_max = 20 * PI / 180; //线速度角速度边界
+    double predict_time = 5.0;//轨迹推算时间长度
+    double a_vmax = 0.2, a_wmax = 40 * PI / 180; //线加速度和角加速度最大值
+    double v_sample = 0.1, w_sample = 1.2 * PI / 180; //采样分辨率，提高这两个值可以加快程序的速度，而且对结果的效果貌似也没有什么影响,nice
+    double alpha = 0.15, beta = 8.0, gamma = 4; //轨迹评价函数系数
+    double radius = 1.0; // 用于判断是否到达目标点
+    double judge_distance = 10; //若与障碍物的最小距离大于阈值（例如这里设置的阈值为robot_radius+0.2）,则设为一个较大的常值
+    vector <Vector2d> obstacle, Ps;//障碍物位置，生成的原始轨迹
+    // 将障碍物投影到实际位置上
+    for (i = 0; i < barrier.size(); i++)
+        obstacle.push_back(barrier[i]);
+    vector <VectorXd> trajectory;
+    trajectory.push_back(state);
+    DWA dwa(dt, v_min, v_max, w_min, w_max, predict_time, a_vmax, a_wmax, v_sample, w_sample, alpha, beta, gamma,
+            radius, judge_distance);
+    //保存画图数据
+    vector<double> x_, y_, predict_x, predict_y;
+    while (true) {
+        pair <vector<double>, vector<VectorXd>> res = dwa.dwaControl(state, goal, obstacle);
+        state = dwa.kinematicModel(state, res.first, dt);
+        trajectory.push_back(state);
+        x_.push_back(state(0));
+        y_.push_back(state(1));
+        for (VectorXd s: res.second) {//画出推算的轨迹
+            predict_x.push_back(s(0));
+            predict_y.push_back(s(1));
+        }
+        predict_x = {};
+        predict_y = {};
+        double dist_to_goal = (state.head(2) - goal).norm();
+        if (dist_to_goal <= radius)
+            break;
+    }
+    // -----------------------------------下面是贝塞尔曲线的内容-------------------------------
+    Ps.push_back(Vector2d(0,0));
+    //  注意，相关系数在这里改，整个曲线的缩放系数
+    for (i = 0; i < y_.size(); i++)
+        Ps.push_back(Vector2d(x_[i]/1.15, y_[i]));
+    Ps.push_back(Vector2d(0,12));
+    cout << "生成的轨迹为：" << endl;
+    tmp_increasement = 0;
+    for (i = 0; i < 100; i++) {
+        Vector2d pos = bezierCommon(Ps, (double) i / 100);
+        if (i % (100 / gap) == 0)  // 将原来的路标点进行替换
+        {
+            end = to_y * pos;
+            r_x_[index + tmp_increasement] = now_pos_x + end[0];
+            r_y_[index + tmp_increasement] = now_pos_y + end[1];
+            cout << now_pos_x << " " << now_pos_y << " " << end[0] << " " << end[1] << endl;
+            tmp_increasement++;
+            if(tmp_increasement>=gap)
+                break;
+        }
+    }
+    save_new_pos();
+    return;
+}
+
+void PurePursuit::save_new_pos() {
+    fstream f;
+    f.open(new_save_path, ios::out | ios::app);
+    for (i = 0; i < r_x_.size(); i++) {
+        f << r_x_[i] << " " << r_y_[i] << " " << r_z_[i] << " " << r_yam_[i] << endl;
+    }
+    cout << "保存新路径完成！" << endl;
+    f.close();
+    return;
+}
+
 PurePursuit::~PurePursuit(){
   geometry_msgs::Twist vel_msg;
   vel_msg.linear.x = 0;
   vel_msg.angular.z = 0;
   pub_vel_.publish(vel_msg);
 
-  if(log_flag){
-    if (logfile.is_open()) {
-        std::cout<<"close!!!!"<<std::endl;
-        logfile.close();
-    }
-  }
 }
 void PurePursuit::run()
 {

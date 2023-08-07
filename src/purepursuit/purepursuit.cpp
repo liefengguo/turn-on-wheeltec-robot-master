@@ -159,6 +159,7 @@ void poseCallback(const nav_msgs::Odometry &currentWaypoint) {
       geometry_msgs::Twist vel_msg;
       vel_msg.linear.x = 0.3;
       vel_msg.angular.z = theta_send;
+      cout << "___________________" << vel_msg.linear.x  << " " << vel_msg.linear.z << endl;
       purepersuit_.publish(vel_msg);
       // 发布小车运动轨迹
       geometry_msgs::PoseStamped this_pose_stamped;
