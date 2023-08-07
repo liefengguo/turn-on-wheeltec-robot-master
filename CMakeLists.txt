@@ -35,9 +35,11 @@ find_package(Eigen3 REQUIRED)
 add_compile_options(-g -std=c++11)    #-g -> core dumped
 
 catkin_package(
-  CATKIN_DEPENDS roscpp geometry_msgs message_runtime EIGEN3
+  CATKIN_DEPENDS roscpp geometry_msgs message_runtime
 )
-
+catkin_package(
+        DEPENDS EIGEN3
+)
 # defind robot status massage
 # command atkin_make -DCATKIN_WHITELIST_PACKAGES="new_msg"
 
